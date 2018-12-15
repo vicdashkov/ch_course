@@ -1,1 +1,2 @@
-clickhouse-driver=0.0.16
+clickhouse-driver==0.0.16
+asyncpool==1.0

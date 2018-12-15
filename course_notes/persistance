@@ -1,0 +1,72 @@
+Lecture 1
+
+Ok, so first we begin by creating POC. I always wanted to create Pokemon business. 
+With Ch My dreams come true finally. For various aspects of my Pokemon business perhaps there’re other 
+tools I can use, but when it comes to tracking evens associated with Pokemons, 
+I doubght there’s a better tool than CH. 
+
+Ok, so for the POC the eisiest tool to start is Docker. We go to 
+https://hub.docker.com/r/yandex/clickhouse-server/ and there’s fairly standart stuff. 
+It looks like they suggest using client and server in combination. 
+Let’s take a closer look at commands thay provide  
+
+$ docker run -d --name some-clickhouse-server --ulimit nofile=262144:262144 yandex/clickhouse-server 
+$ docker run -it --rm --link some-clickhouse-server:clickhouse-server yandex/clickhouse-client --host clickhouse-server 
+
+Ok, I run a first one. Eveerything seems to be fine so far. 
+Second one worked as well. We are connected. Lets take a look at what we have here 
+
+SHOW DATABASES 
+┌─name────┐ 
+│ default │ 
+│ system  │ 
+└─────────┘ 
+
+I select tables from these DBs. Default is empty and 
+system has 23 rows in set
+Ok. We’ll take a look at these guys at a later time. 
+As of now when I ran docker ps I see that ports are not open. 
+I also strongly suspect that persistence is not set. Let's first test my assumption about persistence.  
+
+Execute (and I’m sorry I looked up these commands beforehand:) )
+
+CREATE TABLE test 
+( 
+id UInt16, 
+date Date 
+) 
+ENGINE = MergeTree(date, (id, date), 8192);  
+
+And let's kill docker now and issue commands to start up docker CH again. 
+Obviously, our data is gone. What do we do to persist. Let's look at what we can do. 
+Aha, there’s configs let’s look at them. And here’s where CH expects to persist data 
+(/var/lib/clickhouse/). 
+Let’t add this volume to our docker. And perheps lets use docker compose  
+
+So our docker compose looks something like this now
+version: '3'
+
+services:
+  ch:
+    image: yandex/clickhouse-server:18.14.15
+    restart: on-failure
+    volumes:
+      - './data/ch:/var/lib/clickhouse/'
+    ports:
+      - 9000:9000
+      - 8123:8123
+    ulimits:
+      nofile: 262144
+    
+  client:
+    image: yandex/clickhouse-client:18.14.15
+
+And if we kill docker container and then start it again we see our data is still there. Ok. good start.
+I've got so many events I need to put in there. Let's start.
+
+First let's define schema for my Pokemon events. I have no idea as to final structure of this table (agile)
+So I'll start simple. CH docs say merge tree is the best best table out there for most purposes. 
+I'll take is as true and start from there.
+
+Creating database first
+CREATE DATABASE pokemon

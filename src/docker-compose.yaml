@@ -11,6 +11,14 @@ services:
       - 8123:8123
     ulimits:
       nofile: 262144
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.5'
+#          memory: 512M
+#        reservations:
+#          cpus: '0.1'
+#          memory: 256M
     
   client:
     image: yandex/clickhouse-client:18.14.15

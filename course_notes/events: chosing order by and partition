@@ -1,0 +1,67 @@
+And first iteration of event table. Hm this makes me wonder if I know how to model CH's table.
+In the docks they say CH doesn't like single inserts. Let's see performance impact
+But I also have question about this merge tree deal. What is this partition and does it make any difference?
+Luckily, I've got just the data to compare.
+
+CREATE TABLE pokemon.event
+(
+  id UInt64,
+  time DateTime,
+  type UInt16,
+  pokemon_id UInt16
+)
+ENGINE = MergeTree();
+
+Hm so we've got an error here. It's somewhat confusing I would expect from he docs that there are some kind of defaults
+with all the [] deal. But we've got an error.
+Ok I looked up and the minimum settings you should provide for merge tree would look like this
+
+CREATE TABLE pokemon.event_time
+(
+  id UInt64,
+  time DateTime,
+  type UInt16,
+  pokemon_id UInt16
+)
+ENGINE = MergeTree()
+PARTITION BY toYYYYMM(time)
+ORDER BY (time, id);  -- pay attention to order of fields
+
+but, as you might've guessed by the suffix in previous table, we can do something like this. Is there a difference?.
+Lets compare by creating this table as well
+
+CREATE TABLE pokemon.event_time_func
+(
+  id UInt64,
+  time DateTime,
+  type UInt16,
+  pokemon_id UInt16
+)
+ENGINE = MergeTree()
+PARTITION BY toYYYYMM(time)
+ORDER BY (toYYYYMM(time), id);
+
+Lets fill these tables with events inserted one by one.
+Oh it's taking forever. I mean there's network latency of course, but CH generally doesn't like small insert batches.
+It loves in fact large batches
+Let's take a look at our tables in some details with query from here
+https://gist.github.com/sanchezzzhak/511fd140e8809857f8f1d84ddb937015
+
+inserting to event_time 1 event per insert; 100 events per day took: 419s
+inserting to event_time_func 1 event per insert; 100 events per day took: 542s
+inserting to event_time 10 event per insert; 100 events per day took:
+inserting to event_time_func 10 event per insert; 100 events per day took:
+
+////// see size of data (maybe usefull to compare between size of insert along with speed)
+///// can proof concurrency with SHOW PROCESSLIST
+
+///// TODO: redo benchmark
+
+-- before fixing all the todos
+┌─table───────────┬─size──────┬─rows─┬─days─┬─avgDaySize─┐
+│ event_time      │ 38.29 KiB │ 3000 │    0 │ inf YiB    │
+│ event_time_func │ 44.26 KiB │ 3000 │    0 │ inf YiB    │
+└─────────────────┴───────────┴──────┴──────┴────────────┘
+
+-- with the same connection inserting 3581 batch 1 took 499 seconds
+-- reusing connection inserting ~3500 batch 1 took 381 seconds

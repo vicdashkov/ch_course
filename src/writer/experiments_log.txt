@@ -1,0 +1,2 @@
+2018-12-15 08:37:59 - experiment: connection-pool-not-async --took: 381.15; bulk size: 1; events per day: 10; workers: 10;
+2018-12-15 T17:27:07 - experiment: connection-pool-async -- took: 273.15; bulk size: 1; events per day: 10; workers: 10
