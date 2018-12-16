@@ -95,7 +95,7 @@ async def fill_events(_loop, number_per_day, bulk_size):
 
 
 def log_experiment(experiment_took):
-    with open("experiments_log.txt", 'a') as f:
+    with open("inserter_experiments_log.txt", 'a') as f:
         text = f"{format_date_from_timestamp(time.time())} - " \
                f"table: {TABLE_NAME} - " \
                f"inserted: {total_inserted_events} - " \
