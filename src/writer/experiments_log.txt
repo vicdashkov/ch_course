@@ -1,2 +1,6 @@
 2018-12-15 08:37:59 - experiment: connection-pool-not-async --took: 381.15; bulk size: 1; events per day: 10; workers: 10;
 2018-12-15 T17:27:07 - experiment: connection-pool-async -- took: 273.15; bulk size: 1; events per day: 10; workers: 10
+2018-12-16 15:13:16 - table: event_0_date_batch - inserted: 8900 - took: 168.58 - bulk size: 5 - events per day: 25 - workers: 10
+2018-12-16 15:18:52 - table: event_0_date_single - inserted: 1780 - took: 166.67 - bulk size: 1 - events per day: 5 - workers: 10
+2018-12-16 15:25:06 - table: event_0_time_batch - inserted: 8900 - took: 155.42 - bulk size: 5 - events per day: 25 - workers: 10
+2018-12-16 15:29:01 - table: event_0_time_func_batch - inserted: 8900 - took: 159.49 - bulk size: 5 - events per day: 25 - workers: 10

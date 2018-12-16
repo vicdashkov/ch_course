@@ -1,9 +1,8 @@
-And first iteration of event table. Hm this makes me wonder if I know how to model CH's table.
-In the docks they say CH doesn't like single inserts. Let's see performance impact
-But I also have question about this merge tree deal. What is this partition and does it make any difference?
-Luckily, I've got just the data to compare.
+DO: Performance impact of single insert
+DO: TEST 3 DIFFERENT TABLES for partitioning and order by
+DO: demonstrate SHOW PROCESSLIST
 
-CREATE TABLE pokemon.event
+CREATE TABLE pokemon.event -- mention this will not work
 (
   id UInt64,
   time DateTime,
@@ -12,11 +11,7 @@ CREATE TABLE pokemon.event
 )
 ENGINE = MergeTree();
 
-Hm so we've got an error here. It's somewhat confusing I would expect from he docs that there are some kind of defaults
-with all the [] deal. But we've got an error.
-Ok I looked up and the minimum settings you should provide for merge tree would look like this
-
-CREATE TABLE pokemon.event_time
+CREATE TABLE pokemon.event_0_time_batch
 (
   id UInt64,
   time DateTime,
@@ -27,10 +22,7 @@ ENGINE = MergeTree()
 PARTITION BY toYYYYMM(time)
 ORDER BY (time, id);  -- pay attention to order of fields
 
-but, as you might've guessed by the suffix in previous table, we can do something like this. Is there a difference?.
-Lets compare by creating this table as well
-
-CREATE TABLE pokemon.event_time_func
+CREATE TABLE pokemon.event_0_time_func_batch
 (
   id UInt64,
   time DateTime,
@@ -41,27 +33,56 @@ ENGINE = MergeTree()
 PARTITION BY toYYYYMM(time)
 ORDER BY (toYYYYMM(time), id);
 
-Lets fill these tables with events inserted one by one.
-Oh it's taking forever. I mean there's network latency of course, but CH generally doesn't like small insert batches.
-It loves in fact large batches
-Let's take a look at our tables in some details with query from here
-https://gist.github.com/sanchezzzhak/511fd140e8809857f8f1d84ddb937015
+CREATE TABLE pokemon.event_0_date_batch
+(
+  id UInt64,
+  time DateTime,
+  date Date,
+  type UInt16,
+  pokemon_id UInt16
+)
+ENGINE = MergeTree()
+PARTITION BY date
+ORDER BY (date, id);
 
-inserting to event_time 1 event per insert; 100 events per day took: 419s
-inserting to event_time_func 1 event per insert; 100 events per day took: 542s
-inserting to event_time 10 event per insert; 100 events per day took:
-inserting to event_time_func 10 event per insert; 100 events per day took:
+CREATE TABLE pokemon.event_0_date_single
+(
+  id UInt64,
+  time DateTime,
+  date Date,
+  type UInt16,
+  pokemon_id UInt16
+)
+ENGINE = MergeTree()
+PARTITION BY date
+ORDER BY (date, id);
 
-////// see size of data (maybe usefull to compare between size of insert along with speed)
-///// can proof concurrency with SHOW PROCESSLIST
+-- from https://gist.github.com/sanchezzzhak/511fd140e8809857f8f1d84ddb937015
+SELECT table, formatReadableSize(size) as size, rows, days, formatReadableSize(avgDaySize) as avgDaySize FROM (
+    SELECT
+        table,
+        sum(bytes) AS size,
+        sum(rows) AS rows
+    FROM system.parts
+    WHERE active
+    GROUP BY table
+    ORDER BY rows DESC
+)
 
-///// TODO: redo benchmark
+┌─table───────────────────┬─size───────┬─rows─┬
+│ event_0_time_batch      │ 144.05 KiB │ 8900 │
+│ event_0_date_batch      │ 416.81 KiB │ 8900 │
+│ event_0_time_func_batch │ 142.65 KiB │ 8900 │
+│ event_0_date_single     │ 308.38 KiB │ 1780 │
+└─────────────────────────┴────────────┴──────┴
 
--- before fixing all the todos
-┌─table───────────┬─size──────┬─rows─┬─days─┬─avgDaySize─┐
-│ event_time      │ 38.29 KiB │ 3000 │    0 │ inf YiB    │
-│ event_time_func │ 44.26 KiB │ 3000 │    0 │ inf YiB    │
-└─────────────────┴───────────┴──────┴──────┴────────────┘
+2018-12-16 15:13:16 - table: event_0_date_batch - inserted: 8900 - took: 168.58 - bulk size: 5 - events per day: 25 - workers: 10
+2018-12-16 15:18:52 - table: event_0_date_single - inserted: 1780 - took: 166.67 - bulk size: 1 - events per day: 5 - workers: 10
+2018-12-16 15:25:06 - table: event_0_time_batch - inserted: 8900 - took: 155.42 - bulk size: 5 - events per day: 25 - workers: 10
+2018-12-16 15:29:01 - table: event_0_time_func_batch - inserted: 8900 - took: 159.49 - bulk size: 5 - events per day: 25 - workers: 10
 
--- with the same connection inserting 3581 batch 1 took 499 seconds
--- reusing connection inserting ~3500 batch 1 took 381 seconds
+SELECT count() from event_0_time_batch group by toYYYYMM(time) 2.677s 2.240s 3.273s
+SELECT count() from event_0_date_batch group by toYYYYMM(date) 2.219s 1.797s 2.073s
+SELECT count() from event_0_time_func_batch group by toYYYYMM(time) 0.250s 0.159s 0.147s
+
+SUMMARY: seems don't have to use date anymore (used to have to like us) https://github.com/yandex/ClickHouse/issues/2802

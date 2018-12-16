@@ -13,7 +13,6 @@ from src.writer.utils import format_date_from_timestamp
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--table_name', help="table name; default is ''", type=str, default="")
-parser.add_argument('--experiment_name', help="name of the experiment; default is table name", type=str, default=None)
 parser.add_argument('--bulk_size', help="# event to inset at once; default is 10000", type=int, default=10000)
 parser.add_argument('--per_day', help="# event to inset per day; default is 1000000", type=int, default=1000000)
 parser.add_argument('--workers', help="# of workers; default is 10", type=int, default=10)
@@ -23,8 +22,8 @@ TABLE_NAME = args.table_name
 BULK_SIZE = args.bulk_size
 EVENTS_PER_DAY = args.per_day
 WORKERS = args.workers
-EXPERIMENT_NAME = args.experiment_name or TABLE_NAME
 
+total_inserted_events = 0
 pool = {}
 
 
@@ -45,6 +44,10 @@ async def write_to_event(data: list, _):
     print(f"writing to {TABLE_NAME} {len(data)} rows")
     conn_id, conn = get_connection()
     await conn.execute(f'INSERT INTO pokemon.{TABLE_NAME} VALUES', data)
+
+    global total_inserted_events
+    total_inserted_events += len(data)
+
     return_connection(conn_id)
 
 
@@ -63,6 +66,7 @@ def generate_random_event(event_date: datetime.datetime) -> dict:
     return {
         "id": event_id,
         "time": event_date,
+        # "date": event_date.date(),
         "type": event_type,
         "pokemon_id": pokemon_id}
 
@@ -74,7 +78,7 @@ def generate_random_events(event_date: datetime.datetime, number_events: int) ->
 async def fill_events(_loop, number_per_day, bulk_size):
     async with asyncpool.AsyncPool(
             _loop,
-            num_workers=10,
+            num_workers=WORKERS,
             worker_co=write_to_event,
             max_task_time=300,
             log_every_n=10,
@@ -82,7 +86,7 @@ async def fill_events(_loop, number_per_day, bulk_size):
             logger=logging.getLogger("CHPool")) as p:
 
         insert_time = datetime.datetime(2018, 1, 1)
-        for i in range(356):
+        for i in range(356):  # TODO: FIX
             for _ in range(int(number_per_day / bulk_size)):
                 events = generate_random_events(insert_time, bulk_size)
                 await p.push(events, None)
@@ -93,23 +97,22 @@ async def fill_events(_loop, number_per_day, bulk_size):
 def log_experiment(experiment_took):
     with open("experiments_log.txt", 'a') as f:
         text = f"{format_date_from_timestamp(time.time())} - " \
-               f"experiment: {EXPERIMENT_NAME} -- " \
-               f"took: {round(experiment_took, 2)}; " \
-               f"bulk size: {BULK_SIZE}; " \
-               f"events per day: {EVENTS_PER_DAY}; " \
-               f"workers: {WORKERS}"
+               f"table: {TABLE_NAME} - " \
+               f"inserted: {total_inserted_events} - " \
+               f"took: {round(experiment_took, 2)} - " \
+               f"bulk size: {BULK_SIZE} - " \
+               f"events per day: {EVENTS_PER_DAY} - " \
+               f"workers: {WORKERS}\n"
         f.write(text)
 
 
 if __name__ == '__main__':
-    start = time.time()
-    print("inserter started at", format_date_from_timestamp(start))
-
+    loop = asyncio.get_event_loop()
     create_pool()
 
-    loop = asyncio.get_event_loop()
+    start = time.time()
+    print("inserter started at", format_date_from_timestamp(start))
     loop.run_until_complete(fill_events(loop, EVENTS_PER_DAY, BULK_SIZE))
-
     end = time.time()
     took = end - start
     print(f"inserter ended at {format_date_from_timestamp(end)}; took: {took} seconds")

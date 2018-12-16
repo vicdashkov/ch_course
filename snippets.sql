@@ -5,3 +5,6 @@ CREATE TABLE test
     date Date
 )
 ENGINE = MergeTree(date, (id, date), 8192);
+
+SHOW PROCESSLIST
+
