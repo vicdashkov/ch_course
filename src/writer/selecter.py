@@ -10,14 +10,14 @@ args = parser.parse_args()
 
 NUMBER_BENCHMARK_RUNS = args.benchmark_runs
 
-QUERY = ""
+QUERY = "SELECT count() from pokemon.event_0_time_batch group by toYYYYMM(time)"
 
 client = Client('localhost')
 
 
 def select_with_timing() -> int:
     start = time.time()
-    print(client.execute(QUERY))
+    client.execute(QUERY)
     end = time.time()
     return end - start
 
