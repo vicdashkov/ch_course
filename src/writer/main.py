@@ -86,7 +86,7 @@ async def fill_events(_loop, number_per_day, bulk_size):
             logger=logging.getLogger("CHPool")) as p:
 
         insert_time = datetime.datetime(2018, 1, 1)
-        for i in range(356):  # TODO: FIX
+        for i in range(365):
             for _ in range(int(number_per_day / bulk_size)):
                 events = generate_random_events(insert_time, bulk_size)
                 await p.push(events, None)
