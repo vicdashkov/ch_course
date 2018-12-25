@@ -1,9 +1,18 @@
 version: '3'
 
 services:
+
+  zookeeper:
+    image: zookeeper
+    volumes:
+      - './data_zoo/data:/data'
+      - './data_zoo/datalog:/datalog'
+
   ch1:
     image: yandex/clickhouse-server:18.14.15
     restart: on-failure
+    depends_on:
+      - zookeeper
     volumes:
       - './data_ch1/ch:/var/lib/clickhouse/'
       - './ch_configs:/etc/clickhouse-server/'
@@ -16,6 +25,8 @@ services:
   ch2:
     image: yandex/clickhouse-server:18.14.15
     restart: on-failure
+    depends_on:
+      - zookeeper
     volumes:
       - './data_ch2/ch:/var/lib/clickhouse/'
       - './ch_configs:/etc/clickhouse-server/'
@@ -25,8 +36,21 @@ services:
   ch3:
     image: yandex/clickhouse-server:18.14.15
     restart: on-failure
+    depends_on:
+      - zookeeper
     volumes:
       - './data_ch3/ch:/var/lib/clickhouse/'
+      - './ch_configs:/etc/clickhouse-server/'
+    ulimits:
+      nofile: 262144
+
+  ch4:
+    image: yandex/clickhouse-server:18.14.15
+    restart: on-failure
+    depends_on:
+      - zookeeper
+    volumes:
+      - './data_ch4/ch:/var/lib/clickhouse/'
       - './ch_configs:/etc/clickhouse-server/'
     ulimits:
       nofile: 262144
