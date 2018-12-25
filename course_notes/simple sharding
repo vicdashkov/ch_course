@@ -93,6 +93,9 @@ ENGINE = Distributed(segmented, pokemon, event_1, rand())
 
 insert into event_1_distributed values(122, '2018-01-01 00:00:00', 33, 2222)
 
+TODO: FILE A BUG FOR THIS?
+NOTE: if local tables are not created on all nodes, CH will through an error when select. Insert will work
+
 Now let's simulate hot changing from single to multinode cluster. drop all the tables and start clean
 select * from system.clusters
 should be empty
@@ -135,5 +138,52 @@ first on every node:
 ALTER TABLE event_1 ADD COLUMN location_id UInt16
 then
 ALTER TABLE event_1_distributed ADD COLUMN location_id UInt16
-TODO: try to insert if alter only on one node
 insert into event_1_distributed values(122, '2018-01-01 00:00:00', 33, 2222,4)
+
+NOTE: if alter only one one node, insert and select will work, but only in format defined on each node.
+Make sure to modify distributed table on every node.
+
+Now just for fun lets measure select from distributed tables and from single node table.
+On ch1 let's create
+CREATE TABLE pokemon.event_1_single_node
+(
+  id UInt64,
+  time DateTime,
+  type UInt16,
+  pokemon_id UInt16,
+  location_id UInt16
+)
+ENGINE = MergeTree()
+PARTITION BY toYYYYMM(time)
+ORDER BY (toYYYYMM(time), id);
+Lets insert 1850 events to distributed talbes and to single node talble
+
+RESULTS OF INSERTS:
+2018-12-25 09:30:46 - table: event_1_distributed - inserted: 18250 - took: 366.77 - bulk size: 5 - events per day: 50 - workers: 10
+2018-12-25 09:40:45 - table: event_1_single_node - inserted: 18250 - took: 490.9 - bulk size: 5 - events per day: 50 - workers: 10
+
+RESULTS OF SELECTS: TODO: maybe redo with docker limits
+ 2018-12-25 09:43:28
+SELECT count() from pokemon.event_1_single_node group by toYYYYMM(time)
+ attempt 0 took: 0.74587s
+ attempt 1 took: 0.45294s
+ attempt 2 took: 0.51253s
+
+ 2018-12-25 09:44:06
+SELECT count() from pokemon.event_1_distributed group by toYYYYMM(time)
+ attempt 0 took: 1.25376s
+ attempt 1 took: 1.01273s
+ attempt 2 took: 0.98734s
+
+ 2018-12-25 09:45:41
+SELECT count() from pokemon.event_1_distributed group by toYYYYMM(time)
+ attempt 0 took: 1.22017s
+ attempt 1 took: 0.80592s
+ attempt 2 took: 0.95683s
+
+ 2018-12-25 09:45:58
+SELECT count() from pokemon.event_1_single_node group by toYYYYMM(time)
+ attempt 0 took: 0.74441s
+ attempt 1 took: 0.53134s
+ attempt 2 took: 0.44611s
+

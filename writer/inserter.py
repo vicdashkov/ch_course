@@ -68,7 +68,8 @@ def generate_random_event(event_date: datetime.datetime) -> dict:
         "time": event_date,
         # "date": event_date.date(),
         "type": event_type,
-        "pokemon_id": pokemon_id}
+        "pokemon_id": pokemon_id,
+        "location_id": pokemon_id}
 
 
 def generate_random_events(event_date: datetime.datetime, number_events: int) -> list:
