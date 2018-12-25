@@ -1,8 +1,8 @@
+-- inside
 /etc/clickhouse-server/users.xml
 
-add this:
-
- <vic>
+-- add this:
+<vic>
     <password>12345</password>
     <networks incl="networks" replace="replace">
         <ip>::/1</ip>

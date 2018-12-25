@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  ch1:
+    image: yandex/clickhouse-server:18.14.15
+    restart: on-failure
+    volumes:
+      - './data_ch1/ch:/var/lib/clickhouse/'
+      - './ch_configs:/etc/clickhouse-server/'
+    ports:
+      - 9000:9000
+      - 8123:8123
+    ulimits:
+      nofile: 262144
+
+  ch2:
+    image: yandex/clickhouse-server:18.14.15
+    restart: on-failure
+    volumes:
+      - './data_ch2/ch:/var/lib/clickhouse/'
+      - './ch_configs:/etc/clickhouse-server/'
+    ulimits:
+      nofile: 262144
+
+  ch3:
+    image: yandex/clickhouse-server:18.14.15
+    restart: on-failure
+    volumes:
+      - './data_ch3/ch:/var/lib/clickhouse/'
+      - './ch_configs:/etc/clickhouse-server/'
+    ulimits:
+      nofile: 262144
+
+  client:
+    image: yandex/clickhouse-client:18.14.15

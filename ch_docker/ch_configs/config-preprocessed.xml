@@ -153,25 +153,27 @@
     <!-- Configuration of clusters that could be used in Distributed tables.
          https://clickhouse.yandex/docs/en/table_engines/distributed/
       -->
-    <remote_servers incl="clickhouse_remote_servers">
-        <!-- Test only shard config for testing distributed storage -->
-        <test_shard_localhost>
+    <remote_servers>
+        <segmented>
             <shard>
                 <replica>
-                    <host>localhost</host>
+                    <host>ch1</host>
                     <port>9000</port>
                 </replica>
             </shard>
-        </test_shard_localhost>
-        <test_shard_localhost_secure>
             <shard>
                 <replica>
-                    <host>localhost</host>
-                    <port>9440</port>
-                    <secure>1</secure>
+                    <host>ch2</host>
+                    <port>9000</port>
                 </replica>
             </shard>
-        </test_shard_localhost_secure>
+            <shard>
+                <replica>
+                    <host>ch3</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+        </segmented>
     </remote_servers>
 
 

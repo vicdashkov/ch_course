@@ -2,7 +2,7 @@ DO: Performance impact of single insert
 DO: TEST 3 DIFFERENT TABLES for partitioning and order by
 DO: demonstrate SHOW PROCESSLIST
 
-CREATE TABLE pokemon.event -- mention this will not work
+CREATE TABLE pokemon.event -- mention this query will not work
 (
   id UInt64,
   time DateTime,

@@ -9,7 +9,7 @@ import random
 import time
 import argparse
 
-from src.writer.utils import format_date_from_timestamp
+from writer.utils import format_date_from_timestamp
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--table_name', help="table name; default is ''", type=str, default="")

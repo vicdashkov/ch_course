@@ -1,1 +1,6 @@
 consider creating separate db for every lesson
+Real use cases from industry. (take a look at altinity site)
+think of interesting stuff to query for like business insights
+
+presentation "internals" has benchmark results for adding more nodes to cluster
+make sure distributed ddl works with zookeper https://github.com/yandex/ClickHouse/issues/936

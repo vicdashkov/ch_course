@@ -105,5 +105,7 @@ venv.bak/
 
 .idea/*
 
-src/data/*
+ch_docker/data_ch1/*
+ch_docker/data_ch2/*
+ch_docker/data_ch3/*
 *.pptx
