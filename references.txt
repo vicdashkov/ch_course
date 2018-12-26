@@ -1,5 +1,7 @@
 Backlog queue:
 https://blog.cloudflare.com/http-analytics-for-6m-requests-per-second-using-clickhouse/
+https://www.youtube.com/watch?v=gifeThkqHjg
+https://data-flair.training/blogs/zookeeper-tutorial/
 
 References
 data distribution - https://www.altinity.com/blog/2017/6/5/clickhouse-data-distribution

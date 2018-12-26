@@ -1,4 +1,4 @@
-TODO: time it
+TODO: time it with dry run
 
 Why do we need cluster?
 - scalability (sharding or segmentation) - comes with CH
@@ -42,7 +42,7 @@ services:
 Executing should return empty
 select * from system.clusters
 
-Let's add this segment and run select * from system.clusters
+Let's add this segment to configs and run select * from system.clusters
 <remote_servers>
     <segmented>
         <shard>

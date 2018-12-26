@@ -2,6 +2,8 @@ DO: Performance impact of single insert
 DO: TEST 3 DIFFERENT TABLES for partitioning and order by
 DO: demonstrate SHOW PROCESSLIST
 
+NOTE: better to get used to merge tree engine, sind data replication is only supported for these engines
+
 CREATE TABLE pokemon.event -- mention this query will not work
 (
   id UInt64,

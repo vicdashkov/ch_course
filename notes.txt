@@ -4,3 +4,5 @@ think of interesting stuff to query for like business insights
 
 presentation "internals" has benchmark results for adding more nodes to cluster
 make sure distributed ddl works with zookeper https://github.com/yandex/ClickHouse/issues/936
+
+merge tree settings https://github.com/yandex/ClickHouse/blob/master/dbms/src/Storages/MergeTree/MergeTreeSettings.h

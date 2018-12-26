@@ -1,0 +1,150 @@
+Replication works at the level of an individual table, not the entire server.
+CREATE, DROP, ATTACH, DETACH and RENAME queries are executed on a single server and are not replicated
+Replicated tables can have different names on different replicas.
+Insert data in batches of no more than one INSERT per second
+
+Ok lets add remove_server.xml to config.d dir with this
+<yandex>
+    <remote_servers replace="true">
+        <pokemon>
+            <!-- shard 01 -->
+            <shard>
+                <replica>
+                    <host>ch1</host>
+                    <port>9000</port>
+                </replica>
+                <replica>
+                    <host>ch2</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+
+            <!-- shard 02 -->
+            <shard>
+                <replica>
+                    <host>ch3</host>
+                    <port>9000</port>
+                </replica>
+                <replica>
+                    <host>ch4</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+        </pokemon>
+    </remote_servers>
+</yandex>
+
+and to zookeeper.xml add this
+<yandex>
+    <zookeeper replace="true">
+        <node index="1">
+            <host>zookeeper</host>
+            <port>2181</port>
+        </node>
+    </zookeeper>
+</yandex>
+
+Our docker-compose looks like
+version: '3'
+
+services:
+
+  zookeeper:
+    image: zookeeper
+    volumes:
+      - './data_zoo/data:/data'
+      - './data_zoo/datalog:/datalog'
+
+  ch1:
+    image: yandex/clickhouse-server:18.14.15
+    restart: on-failure
+    depends_on:
+      - zookeeper
+    volumes:
+      - './data_ch1/ch:/var/lib/clickhouse/'
+      - './ch_configs:/etc/clickhouse-server/'
+    ports:
+      - 9000:9000
+      - 8123:8123
+    ulimits:
+      nofile: 262144
+
+  ch2:
+    image: yandex/clickhouse-server:18.14.15
+    restart: on-failure
+    depends_on:
+      - zookeeper
+    volumes:
+      - './data_ch2/ch:/var/lib/clickhouse/'
+      - './ch_configs:/etc/clickhouse-server/'
+    ulimits:
+      nofile: 262144
+
+  ch3:
+    image: yandex/clickhouse-server:18.14.15
+    restart: on-failure
+    depends_on:
+      - zookeeper
+    volumes:
+      - './data_ch3/ch:/var/lib/clickhouse/'
+      - './ch_configs:/etc/clickhouse-server/'
+    ulimits:
+      nofile: 262144
+
+  ch4:
+    image: yandex/clickhouse-server:18.14.15
+    restart: on-failure
+    depends_on:
+      - zookeeper
+    volumes:
+      - './data_ch4/ch:/var/lib/clickhouse/'
+      - './ch_configs:/etc/clickhouse-server/'
+    ulimits:
+      nofile: 262144
+
+  client:
+    image: yandex/clickhouse-client:18.14.15
+
+run compose up; connect to cluster with
+docker-compose run --rm client --host ch1 -u vic --password 12345 --database=pokemon
+execute
+SELECT * FROM system.clusters
+we should see
+┌─cluster─┬─shard_num─┬─shard_weight─┬─replica_num─┬─host_name─┬─host_address─┬─port─┬─is_local─┬─user────┬─default_database─┐
+│ pokemon │         1 │            1 │           1 │ ch1       │ 172.23.0.5   │ 9000 │        1 │ default │                  │
+│ pokemon │         1 │            1 │           2 │ ch2       │ 172.23.0.4   │ 9000 │        1 │ default │                  │
+│ pokemon │         2 │            1 │           1 │ ch3       │ 172.23.0.6   │ 9000 │        0 │ default │                  │
+│ pokemon │         2 │            1 │           2 │ ch4       │ 172.23.0.3   │ 9000 │        0 │ default │                  │
+└─────────┴───────────┴──────────────┴─────────────┴───────────┴──────────────┴──────┴──────────┴─────────┴──────────────────┘
+
+CREATE TABLE pokemon.event_2
+(
+  id UInt64,
+  time DateTime,
+  type UInt16,
+  pokemon_id UInt16
+)
+ENGINE = ReplicatedMergeTree('/clickhouse/tables/1/hits', 'ch1')
+PARTITION BY toYYYYMM(time)
+ORDER BY (toYYYYMM(time), id);
+
+CREATE TABLE pokemon.event_2_distributed
+(
+  id UInt64,
+  time DateTime,
+  type UInt16,
+  pokemon_id UInt16
+)
+ENGINE = Distributed(segmented, pokemon, event_2, rand())
+
+
+
+
+
+
+
+
+ALTER TABLE event_2_distributed ON CLUSTER segmented ADD COLUMN location_id DEFAULT 0
+
+TODO alter on cluster ddl
+TODO what about macros?

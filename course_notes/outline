@@ -8,5 +8,5 @@ Table of content
 * 4 nodes setup; Intro to zookeeper (7min)
 * Loosing one node of data and Adding nodes to cluster under load (7min)
 * Catboost and docker (10min)
-*
-
+* Dictionaries (5min)
+* Collapsing merge tree (5min)

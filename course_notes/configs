@@ -1,0 +1,11 @@
+<insert_quorum>
+By default, an INSERT query waits for confirmation of writing the data from only one replica.
+If the data was successfully written to only one replica and the server with this replica ceases to exist,
+the stored data will be lost. To enable getting confirmation of data writes from multiple replicas,
+use the insert_quorum option.
+</insert_quorum>
+
+<max_insert_block_size>
+The INSERT query is divided into blocks up to max_insert_block_size = 1048576 rows.
+</max_insert_block_size>
+
