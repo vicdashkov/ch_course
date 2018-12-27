@@ -1,3 +1,8 @@
+default configs:
+- https://github.com/yandex/ClickHouse/blob/master/dbms/programs/server/
+- https://github.com/yandex/ClickHouse/blob/master/docker/server/docker_related_config.xml
+
+
 <insert_quorum>
 By default, an INSERT query waits for confirmation of writing the data from only one replica.
 If the data was successfully written to only one replica and the server with this replica ceases to exist,
