@@ -1,9 +1,10 @@
 Table of content 
 * Course intro (2min)
-* Benefits of column oriented DB (10min)
+* Column oriented DB (10min)
 * Installing running and configuring CH (docker and bare metal) (10min)
 * overview of configs (7min)
-* setting up https (5min)
+* Overview of system DB (8min)
+* https (5min)
 * Sharding (10min)
 * 4 nodes setup; Intro to zookeeper (7min)
 * Loosing one node of data and Adding nodes to cluster under load (7min)

@@ -1,3 +1,6 @@
+// todo: pokemon is not the best name for the cluster; at least with pokemon db; confusing
+// todo: in system.replicas only 1 replica shows up why?
+
 Replication works at the level of an individual table, not the entire server.
 CREATE, DROP, ATTACH, DETACH and RENAME queries are executed on a single server and are not replicated
 Replicated tables can have different names on different replicas.
@@ -105,6 +108,9 @@ services:
   client:
     image: yandex/clickhouse-client:18.14.15
 
+-- You can optionally specify macros which will substitute {} during table creation.
+-- We will omit the since we have single configs for all the nodes (don't do it in prod)
+
 run compose up; connect to cluster with
 docker-compose run --rm client --host ch1 -u vic --password 12345 --database=pokemon
 execute
@@ -117,6 +123,7 @@ we should see
 │ pokemon │         2 │            1 │           2 │ ch4       │ 172.23.0.3   │ 9000 │        0 │ default │                  │
 └─────────┴───────────┴──────────────┴─────────────┴───────────┴──────────────┴──────┴──────────┴─────────┴──────────────────┘
 
+-- let's create replicated table on ch1
 CREATE TABLE pokemon.event_2
 (
   id UInt64,
@@ -124,10 +131,59 @@ CREATE TABLE pokemon.event_2
   type UInt16,
   pokemon_id UInt16
 )
-ENGINE = ReplicatedMergeTree('/clickhouse/tables/1/hits', 'ch1')
+ENGINE = ReplicatedMergeTree('/clickhouse/tables/1/event', 'ch1')
 PARTITION BY toYYYYMM(time)
 ORDER BY (toYYYYMM(time), id);
 
+-- let's try to insert
+insert into event_2 values(122, '2018-01-01 00:00:00', 33, 2222)
+
+-- now let's create replicated table on ch2
+CREATE TABLE pokemon.event_2
+(
+  id UInt64,
+  time DateTime,
+  type UInt16,
+  pokemon_id UInt16
+)
+ENGINE = ReplicatedMergeTree('/clickhouse/tables/1/event', 'ch2')
+PARTITION BY toYYYYMM(time)
+ORDER BY (toYYYYMM(time), id);
+
+-- run
+select * from event_2
+-- and our data is here. Awesome!
+
+-- let's create this table on to other nodes with
+CREATE TABLE pokemon.event_2
+(
+  id UInt64,
+  time DateTime,
+  type UInt16,
+  pokemon_id UInt16
+)
+ENGINE = ReplicatedMergeTree('/clickhouse/tables/2/event', 'ch3')
+PARTITION BY toYYYYMM(time)
+ORDER BY (toYYYYMM(time), id);
+
+-- insert test data
+insert into event_2 values(1777, '2018-01-01 00:00:00', 7, 777)
+
+-- and create last table
+CREATE TABLE pokemon.event_2
+(
+  id UInt64,
+  time DateTime,
+  type UInt16,
+  pokemon_id UInt16
+)
+ENGINE = ReplicatedMergeTree('/clickhouse/tables/2/event', 'ch4')
+PARTITION BY toYYYYMM(time)
+ORDER BY (toYYYYMM(time), id);
+
+-- select from ch4 should show our data
+
+-- and let's wrap up with distributed table
 CREATE TABLE pokemon.event_2_distributed
 (
   id UInt64,
@@ -135,16 +191,25 @@ CREATE TABLE pokemon.event_2_distributed
   type UInt16,
   pokemon_id UInt16
 )
-ENGINE = Distributed(segmented, pokemon, event_2, rand())
+ENGINE = Distributed(pokemon, pokemon, event_2, rand())
 
+-- insert into distributed
+insert into event_2_distributed values(22222222, '2018-01-01 00:00:00', 2, 222)
+-- and one more time
+insert into event_2_distributed values(4444444, '2018-01-01 00:00:00', 4444, 444444)
+-- and we see our data replication and sharding works as expected. Great success (to those of you fans of Borat; I'm gettin' old)
 
+-- as a wrap up let's try to execute our distributed ddl query on event_2_distributed
+-- NOTE: don't forget pokemon. unless default database is specified
+ALTER TABLE pokemon.event_2_distributed ON CLUSTER pokemon ADD COLUMN location_id DEFAULT 0
 
+-- quick run on shows discrepancy
+desc table event_2 -- no change
+desc table event_2_distributed -- same on all nodes
 
+-- this will return an error; so we still need to execute alter on all the local tables (one time per replica)
+select * from event_2_distributed
+ALTER TABLE pokemon.event_2 ADD COLUMN location_id DEFAULT 0
 
-
-
-
-ALTER TABLE event_2_distributed ON CLUSTER segmented ADD COLUMN location_id DEFAULT 0
-
-TODO alter on cluster ddl
-TODO what about macros?
+-- checking with; and all is good
+SELECT * FROM event_2_distributed
