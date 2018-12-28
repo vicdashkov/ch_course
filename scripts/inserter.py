@@ -26,10 +26,14 @@ WORKERS = args.workers
 total_inserted_events = 0
 pool = {}
 
+##############
+# TODO: need to create config file with table structure, select query, and so on
+##############
+
 
 def create_pool():
     for i in range(WORKERS):
-        client = Client('localhost')
+        client = Client('localhost', secure=True, ca_certs='./server.crt')
         pool[i] = {"c": client, "a": True}
 
 

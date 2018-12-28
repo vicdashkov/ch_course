@@ -12,7 +12,7 @@ NUMBER_BENCHMARK_RUNS = args.benchmark_runs
 
 QUERY = "SELECT count() from pokemon.event_1_single_node group by toYYYYMM(time)"
 
-client = Client('localhost')
+client = Client('localhost', secure=True, ca_certs='./server.crt')
 
 
 def select_with_timing() -> float:

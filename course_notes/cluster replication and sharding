@@ -208,6 +208,7 @@ desc table event_2 -- no change
 desc table event_2_distributed -- same on all nodes
 
 -- this will return an error; so we still need to execute alter on all the local tables (one time per replica)
+-- note again that CREATE, DROP, ATTACH, DETACH and RENAME will be executed on per node
 select * from event_2_distributed
 ALTER TABLE pokemon.event_2 ADD COLUMN location_id DEFAULT 0
 

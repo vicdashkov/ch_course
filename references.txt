@@ -1,4 +1,6 @@
 Backlog queue:
+https://youtu.be/iQsKdtjwtYI
+https://www.howtogeek.com/howto/33949/htg-explains-what-is-encryption-and-how-does-it-work/
 https://blog.cloudflare.com/http-analytics-for-6m-requests-per-second-using-clickhouse/
 https://www.youtube.com/watch?v=gifeThkqHjg
 https://data-flair.training/blogs/zookeeper-tutorial/

@@ -9,7 +9,7 @@ services:
       - './data_zoo/datalog:/datalog'
 
   ch1:
-    image: yandex/clickhouse-server:18.14.15
+    image: yandex/clickhouse-server:18.16.1
     restart: on-failure
     depends_on:
       - zookeeper
@@ -19,11 +19,13 @@ services:
     ports:
       - 9000:9000
       - 8123:8123
+      - 9440:9440
+      - 8443:8443
     ulimits:
       nofile: 262144
 
   ch2:
-    image: yandex/clickhouse-server:18.14.15
+    image: yandex/clickhouse-server:18.16.1
     restart: on-failure
     depends_on:
       - zookeeper
@@ -34,7 +36,7 @@ services:
       nofile: 262144
 
   ch3:
-    image: yandex/clickhouse-server:18.14.15
+    image: yandex/clickhouse-server:18.16.1
     restart: on-failure
     depends_on:
       - zookeeper
@@ -45,7 +47,7 @@ services:
       nofile: 262144
 
   ch4:
-    image: yandex/clickhouse-server:18.14.15
+    image: yandex/clickhouse-server:18.16.1
     restart: on-failure
     depends_on:
       - zookeeper
@@ -56,4 +58,6 @@ services:
       nofile: 262144
 
   client:
-    image: yandex/clickhouse-client:18.14.15
+    image: yandex/clickhouse-client:18.16.1
+    volumes:
+      - './client-config.xml:/etc/clickhouse-client/config.xml'
