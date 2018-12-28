@@ -10,5 +10,12 @@ apt-get install openssl
 openssl req -subj "/CN=localhost" -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout /etc/clickhouse-server/server.key -out /etc/clickhouse-server/server.crt
 openssl dhparam -out /etc/clickhouse-server/dhparam.pem 4096
 
+<config>
+    <user>vic</user>
+    <password>12345</password>
+    <stacktrace>True</stacktrace>
+    <secure>True</secure>
+</config>
+
 -- now we should be able to specify ca_certs='./server.crt' in our code and we've got secure connection
--- TODO: client is not working with ssl; posted message to telegram and github
+

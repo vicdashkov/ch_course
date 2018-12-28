@@ -2,4 +2,5 @@
     <user>vic</user>
     <password>12345</password>
     <stacktrace>True</stacktrace>
+    <secure>True</secure>
 </config>
