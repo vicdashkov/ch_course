@@ -16,6 +16,7 @@ services:
     volumes:
       - './data_ch1/ch:/var/lib/clickhouse/'
       - './ch_configs:/etc/clickhouse-server/'
+      - './dictionaries:/opt/dictionaries/'
     ports:
       - 9000:9000
       - 8123:8123
@@ -32,6 +33,7 @@ services:
     volumes:
       - './data_ch2/ch:/var/lib/clickhouse/'
       - './ch_configs:/etc/clickhouse-server/'
+      - './dictionaries:/opt/dictionaries/'
     ulimits:
       nofile: 262144
 
@@ -43,6 +45,7 @@ services:
     volumes:
       - './data_ch3/ch:/var/lib/clickhouse/'
       - './ch_configs:/etc/clickhouse-server/'
+      - './dictionaries:/opt/dictionaries/'
     ulimits:
       nofile: 262144
 
@@ -54,6 +57,7 @@ services:
     volumes:
       - './data_ch4/ch:/var/lib/clickhouse/'
       - './ch_configs:/etc/clickhouse-server/'
+      - './dictionaries:/opt/dictionaries/'
     ulimits:
       nofile: 262144
 

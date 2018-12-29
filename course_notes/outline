@@ -7,11 +7,12 @@ Table of content
 * Overview of engines; merge tree family (7min)
 * Sampling select and insert(5min)
 * Collapsing merge tree (5min)
-* ssl (5min)
+* SSL (5min)
 * Sharding (10min)
 * 4 nodes setup; Intro to zookeeper (7min)
 * Loosing one node of data and Adding nodes to cluster under load (7min)
 * copy data from one table to another
 * Dictionaries (5min)
+* Arrays in db design (4min)
 * Load balancing (7min)
 * Catboost and ch (10min)

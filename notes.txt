@@ -1,8 +1,13 @@
-consider creating separate db for every lesson
+consider creating separate db for every lesson (id do so, use lesson codes, not number)
 Real use cases from industry. (take a look at altinity site)
 think of interesting stuff to query for like business insights
 
 presentation "internals" has benchmark results for adding more nodes to cluster
-make sure distributed ddl works with zookeper https://github.com/yandex/ClickHouse/issues/936
 
-merge tree settings https://github.com/yandex/ClickHouse/blob/master/dbms/src/Storages/MergeTree/MergeTreeSettings.h
+?????transform????? https://clickhouse.yandex/docs/en/query_language/functions/other_functions/#transform
+
+Thing about ignore()
+
+possibly separate lesson on global:
+https://clickhouse.yandex/docs/en/query_language/select/#select-distributed-subqueries
+https://clickhouse.yandex/docs/en/query_language/select/#join-clause

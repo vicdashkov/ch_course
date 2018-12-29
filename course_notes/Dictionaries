@@ -1,0 +1,204 @@
+TODO: BENCHMARD: dict in dict syntax and as engine https://clickhouse.yandex/docs/en/operations/table_engines/dictionary/
+
+-- Function of dict in my place is two fold: holding results of heavy jobs, and fast lookup at the same time
+
+-- CH recommends to use flat, hashed and complex_key_hashed. which provide optimal processing speed.
+
+-- Flat
+-- The dictionary key has the UInt64 type and the value is limited to 500,000.
+-- If a larger key is discovered when creating the dictionary,
+-- ClickHouse throws an exception and does not create the dictionary.
+
+-- I would suggest using lifetime range for dict updates
+
+-- For a text file, it checks the time of modification.
+-- If the time differs from the previously recorded time, the dictionary is updated.
+
+-- (regarding pet name column) "...do pokemons have pets? maybe. if they do let's record"
+
+-- Let's add dictionary directory to our docker-compose, so it looks like:
+version: '3'
+
+services:
+
+  zookeeper:
+    image: zookeeper
+    volumes:
+      - './data_zoo/data:/data'
+      - './data_zoo/datalog:/datalog'
+
+  ch1:
+    image: yandex/clickhouse-server:18.16.1
+    restart: on-failure
+    depends_on:
+      - zookeeper
+    volumes:
+      - './data_ch1/ch:/var/lib/clickhouse/'
+      - './ch_configs:/etc/clickhouse-server/'
+      - './dictionaries:/opt/dictionaries/'
+    ports:
+      - 9000:9000
+      - 8123:8123
+      - 9440:9440
+      - 8443:8443
+    ulimits:
+      nofile: 262144
+
+  ch2:
+    image: yandex/clickhouse-server:18.16.1
+    restart: on-failure
+    depends_on:
+      - zookeeper
+    volumes:
+      - './data_ch2/ch:/var/lib/clickhouse/'
+      - './ch_configs:/etc/clickhouse-server/'
+      - './dictionaries:/opt/dictionaries/'
+    ulimits:
+      nofile: 262144
+
+  ch3:
+    image: yandex/clickhouse-server:18.16.1
+    restart: on-failure
+    depends_on:
+      - zookeeper
+    volumes:
+      - './data_ch3/ch:/var/lib/clickhouse/'
+      - './ch_configs:/etc/clickhouse-server/'
+      - './dictionaries:/opt/dictionaries/'
+    ulimits:
+      nofile: 262144
+
+  ch4:
+    image: yandex/clickhouse-server:18.16.1
+    restart: on-failure
+    depends_on:
+      - zookeeper
+    volumes:
+      - './data_ch4/ch:/var/lib/clickhouse/'
+      - './ch_configs:/etc/clickhouse-server/'
+      - './dictionaries:/opt/dictionaries/'
+    ulimits:
+      nofile: 262144
+
+  client:
+    image: yandex/clickhouse-client:18.16.1
+    volumes:
+      - './client-config.xml:/etc/clickhouse-client/config.xml'
+
+-- Let's add our dict definition to ch configs folder. Our pokemon_dictionary.xml looks like this:
+<yandex>
+    <dictionary>
+
+        <name>pokemon_dict</name>
+
+        <source>
+            <file>
+                <path>/opt/dictionaries/pokemon.csv</path>
+                <format>CSV</format>
+            </file>
+        </source>
+
+        <lifetime>
+            <min>300</min>
+            <max>360</max>
+        </lifetime>
+
+        <layout>
+            <flat/>
+        </layout>
+
+        <structure>
+            <id>
+                <name>id</name>
+            </id>
+            <attribute>
+                <name>Name</name>
+                <type>String</type>
+                <null_value>Solo</null_value>
+            </attribute>
+            <attribute>
+                <name>PetName</name>
+                <type>String</type>
+                <null_value>Rex</null_value>
+            </attribute>
+        </structure>
+
+    </dictionary>
+
+</yandex>
+
+-- when we execute
+SELECT * FROM system.dictionaries format Vertical
+-- we see
+Row 1:
+──────
+name:            pokemon_dict
+origin:          /etc/clickhouse-server/pokemon_dictionary.xml
+type:            Flat
+key:             UInt64
+attribute.names: ['name','pet_name']
+attribute.types: ['String','String']
+bytes_allocated: 2105648
+query_count:     0
+hit_rate:        1
+element_count:   4
+load_factor:     0.00006103608758678569
+creation_time:   2018-12-29 16:35:20
+source:          File: /opt/dictionaries/pokemon.csv CSV
+last_exception:
+
+-- let's now try to get something out of our dict
+SELECT
+    id AS event_id,
+    dictGetString('pokemon_dict', 'name', toUInt64(pokemon_id)) AS name,
+    dictGetString('pokemon_dict', 'pet_name', toUInt64(pokemon_id)) AS pet_name
+FROM pokemon.event_2_distributed
+
+┌─event_id─┬─name────┬─pet_name─┐
+│     1777 │ zalechu │          │
+│  4444444 │ bixby   │          │
+└──────────┴─────────┴──────────┘
+┌─event_id─┬─name────┬─pet_name─┐
+│      122 │ pikachu │ Peanut   │
+│ 22222222 │ malibu  │ Princess │
+└──────────┴─────────┴──────────┘
+
+-- and to make it even more fun, let's create dict engine on ch2
+-- interesting note: I couldn't create dictionary name with hyphen like pokemon-dict todo: pr?
+CREATE TABLE pokemon.pokemon_names
+(
+    id UInt64,
+    name String,
+    pet_name String
+)
+ENGINE = Dictionary(pokemon_dict)
+
+let's try to do join, and we'll benchmark this as well:
+SELECT
+    id AS event_id,
+    name,
+    pet_name
+FROM
+(
+    SELECT
+        id,
+        toUInt64(pokemon_id) AS pokemon_id
+    FROM event_2_distributed
+)
+ANY LEFT JOIN
+(
+    SELECT
+        id AS pokemon_id,
+        name,
+        pet_name
+    FROM pokemon_names
+) USING (pokemon_id)
+
+┌─event_id─┬─name────┬─pet_name─┐
+│     1777 │ zalechu │          │
+│  4444444 │ bixby   │          │
+└──────────┴─────────┴──────────┘
+┌─event_id─┬─name────┬─pet_name─┐
+│      122 │ pikachu │ Peanut   │
+│ 22222222 │ malibu  │ Princess │
+└──────────┴─────────┴──────────┘

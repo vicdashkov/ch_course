@@ -1,5 +1,7 @@
 // todo: pokemon is not the best name for the cluster; at least with pokemon db; confusing
 // todo: in system.replicas only 1 replica shows up why?
+// todo: POSSIBLY: utilize Zookeper to replicate configuration updates, including dictionaries definition files.
+
 
 Replication works at the level of an individual table, not the entire server.
 CREATE, DROP, ATTACH, DETACH and RENAME queries are executed on a single server and are not replicated
