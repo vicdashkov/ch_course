@@ -1,18 +1,19 @@
 Table of content 
-* Course intro (2min)
-* Column oriented DB (10min)
-* Setting up CH (docker; bare metal; add user) (10min)
-* overview of configs (7min)
-* Overview of system DB (8min)
-* Overview of engines; merge tree family (7min)
-* Sampling select and insert(5min)
-* Collapsing merge tree (5min)
-* SSL (5min)
-* Sharding (10min)
-* 4 nodes setup; Intro to zookeeper (7min)
-* Loosing one node of data and Adding nodes to cluster under load (7min)
+* Course intro
+* Column oriented DB
+* Setting up CH (docker; bare metal; add user)
+* overview of configs
+* Overview of system DB
+* Overview of engines; merge tree family
+* Sampling select and insert
+* Collapsing merge tree
+* SSL
+* Sharding
+* 4 nodes setup; Intro to zookeeper
+* Loosing one node of data and Adding nodes to cluster under load
 * copy data from one table to another
-* Dictionaries (5min)
-* Arrays in db design (4min)
-* Load balancing (7min)
-* Catboost and ch (10min)
+* Dictionaries
+* Arrays in ch db design
+* Load balancing
+* Catboost and ch
+* Not in the docs
