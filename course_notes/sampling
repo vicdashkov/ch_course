@@ -1,3 +1,5 @@
+TODO: need more details and better script for the video
+
 CH has this awesome feature that allows to enable sampling
 
 ok. lets start by creating regular table
@@ -14,9 +16,9 @@ PARTITION BY toYYYYMM(time)
 ORDER BY (toYYYYMM(time), id);
 
 Let's do some insert
-insert into pokemon_event_0 (id) values (1)
-insert into pokemon_event_0 (id) values (2)
-insert into pokemon_event_0 (id) values (3)
+insert into pokemon_event_0 (id) values (1);
+insert into pokemon_event_0 (id) values (2);
+insert into pokemon_event_0 (id) values (3);
 
 checking:
 SELECT *

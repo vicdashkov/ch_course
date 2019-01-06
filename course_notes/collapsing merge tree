@@ -1,0 +1,53 @@
+Hi everyone.
+Today we'll talk about collapsing merge tree
+This is an interesting engine. At my place we used it because at some point CH didn't support updates
+And for one of our tables it sort of made sense. We still use it, but now we can make due without it.
+
+I still think It's important to talk about it, and show in graphical way what is going on.
+Let's start
+
+ok so ch documentation has pretty good overview and explanation of this topic
+There's also additional link I'll submit here with some more discussion on the topic
+https://groups.google.com/forum/#!topic/clickhouse/VixyOUD-K68
+
+To start let's create a table
+
+create database collapsing_merge_tree;
+
+CREATE TABLE collapsing_merge_tree.pokemon_age_0
+(
+    pokemon_id UInt64,
+    age UInt8,
+    health String,
+    sign Int8
+)
+ENGINE = CollapsingMergeTree(sign)
+ORDER BY pokemon_id
+
+And I know this is super contrived example, but please bear with me
+
+INSERT INTO collapsing_merge_tree.pokemon_age_0 VALUES (1, 1, 'good', 1);
+INSERT INTO collapsing_merge_tree.pokemon_age_0 VALUES (1, 1, 'good', -1);
+INSERT INTO collapsing_merge_tree.pokemon_age_0 VALUES (1, 2, 'mhe', 1);
+
+lets test our table
+
+SELECT
+    pokemon_id,
+    sum(age * sign) AS age,
+    anyLast(health) as health
+FROM collapsing_merge_tree.pokemon_age_0
+GROUP BY pokemon_id
+HAVING sum(sign) > 0
+
+SELECT * FROM pokemon_age_0 FINAL
+
+let's test assumption that data never merges if we insert with one data part
+INSERT INTO collapsing_merge_tree.pokemon_age_0 VALUES (2, 10, 'mhe', 1), (2, 10, 'mhe', -1), (2, 11, 'almost there', 1);
+
+and more
+INSERT INTO collapsing_merge_tree.pokemon_age_0 VALUES (2, 11, 'almost there', -1), (2, 12, 'almost there again', 1);
+INSERT INTO collapsing_merge_tree.pokemon_age_0 VALUES (2, 12, 'almost there again', -1), (2, 12, 'almost there enough', 1);
+INSERT INTO collapsing_merge_tree.pokemon_age_0 VALUES (2, 12, 'almost there enough', -1), (2, 13, 'almost there enough', 1);
+
+Use this table if you don't mind keeping all the state information at your inserter
