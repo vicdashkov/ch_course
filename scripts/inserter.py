@@ -3,36 +3,18 @@ import logging
 
 import asyncpool
 from aioch import Client
-import sys
 import datetime
-import random
 import time
-import argparse
-
+from scripts import inserter_config
+from scripts.inserter_config import generate_random_event
 from scripts.utils import format_date_from_timestamp
-
-parser = argparse.ArgumentParser()
-parser.add_argument('--table_name', help="table name; default is ''", type=str, default="")
-parser.add_argument('--bulk_size', help="# event to inset at once; default is 10000", type=int, default=10000)
-parser.add_argument('--per_day', help="# event to inset per day; default is 1000000", type=int, default=1000000)
-parser.add_argument('--workers', help="# of workers; default is 10", type=int, default=10)
-args = parser.parse_args()
-
-TABLE_NAME = args.table_name
-BULK_SIZE = args.bulk_size
-EVENTS_PER_DAY = args.per_day
-WORKERS = args.workers
 
 total_inserted_events = 0
 pool = {}
 
-##############
-# TODO: need to create config file with table structure, select query, and so on
-##############
-
 
 def create_pool():
-    for i in range(WORKERS):
+    for i in range(inserter_config.WORKERS):
         client = Client('localhost', secure=True, ca_certs='./server.crt')
         pool[i] = {"c": client, "a": True}
 
@@ -45,9 +27,9 @@ def get_connection():
 
 
 async def write_to_event(data: list, _):
-    print(f"writing to {TABLE_NAME} {len(data)} rows")
+    print(f"writing to {inserter_config.TABLE_NAME} {len(data)} rows")
     conn_id, conn = get_connection()
-    await conn.execute(f'INSERT INTO pokemon.{TABLE_NAME} VALUES', data)
+    await conn.execute(f'INSERT INTO {inserter_config.DB_NAME}.{inserter_config.TABLE_NAME} VALUES', data)
 
     global total_inserted_events
     total_inserted_events += len(data)
@@ -59,23 +41,6 @@ def return_connection(connection_id):
     pool[connection_id]['a'] = True
 
 
-def generate_random_event(event_date: datetime.datetime) -> dict:
-    event_id = random.randint(0, sys.maxsize)
-    event_type = random.randint(0, 3)
-    pokemon_id = random.randint(0, 10)
-    event_date = event_date.replace(
-        hour=random.randint(0, 23),
-        minute=random.randint(0, 59))
-
-    return {
-        "id": event_id,
-        "time": event_date,
-        # "date": event_date.date(),
-        "type": event_type,
-        "pokemon_id": pokemon_id,
-        "location_id": pokemon_id}
-
-
 def generate_random_events(event_date: datetime.datetime, number_events: int) -> list:
     return [generate_random_event(event_date) for _ in range(number_events)]
 
@@ -83,7 +48,7 @@ def generate_random_events(event_date: datetime.datetime, number_events: int) ->
 async def fill_events(_loop, number_per_day, bulk_size):
     async with asyncpool.AsyncPool(
             _loop,
-            num_workers=WORKERS,
+            num_workers=inserter_config.WORKERS,
             worker_co=write_to_event,
             max_task_time=300,
             log_every_n=10,
@@ -102,12 +67,13 @@ async def fill_events(_loop, number_per_day, bulk_size):
 def log_experiment(experiment_took):
     with open("inserter_experiments_log.txt", 'a') as f:
         text = f"{format_date_from_timestamp(time.time())} - " \
-               f"table: {TABLE_NAME} - " \
-               f"inserted: {total_inserted_events} - " \
-               f"took: {round(experiment_took, 2)} - " \
-               f"bulk size: {BULK_SIZE} - " \
-               f"events per day: {EVENTS_PER_DAY} - " \
-               f"workers: {WORKERS}\n"
+            f"table: {inserter_config.TABLE_NAME} - " \
+            f"db: {inserter_config.DB_NAME} - " \
+            f"inserted: {total_inserted_events} - " \
+            f"took: {round(experiment_took, 2)} - " \
+            f"bulk size: {inserter_config.BULK_SIZE} - " \
+            f"events per day: {inserter_config.EVENTS_PER_DAY} - " \
+            f"workers: {inserter_config.WORKERS}\n"
         f.write(text)
 
 
@@ -117,7 +83,7 @@ if __name__ == '__main__':
 
     start = time.time()
     print("inserter started at", format_date_from_timestamp(start))
-    loop.run_until_complete(fill_events(loop, EVENTS_PER_DAY, BULK_SIZE))
+    loop.run_until_complete(fill_events(loop, inserter_config.EVENTS_PER_DAY, inserter_config.BULK_SIZE))
     end = time.time()
     took = end - start
     print(f"inserter ended at {format_date_from_timestamp(end)}; took: {took} seconds")

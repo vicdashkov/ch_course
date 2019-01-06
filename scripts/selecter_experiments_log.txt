@@ -10,3 +10,15 @@ SELECT count() from pokemon.event_0_time_batch group by toYYYYMM(time)
  attempt 0 took: 0.14551s
  attempt 1 took: 0.10422s
  attempt 2 took: 0.11634s
+
+ 2019-01-06 09:17:05
+SELECT count() from sampling.pokemon_event_1 group by toYYYYMM(time)
+ attempt 0 took: 0.25376s
+ attempt 1 took: 0.10202s
+ attempt 2 took: 0.18261s
+
+ 2019-01-06 09:17:35
+SELECT count() from sampling.pokemon_event_2 group by toYYYYMM(time)
+ attempt 0 took: 0.31849s
+ attempt 1 took: 0.19644s
+ attempt 2 took: 0.14629s

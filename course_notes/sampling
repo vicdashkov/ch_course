@@ -1,0 +1,137 @@
+CH has this awesome feature that allows to enable sampling
+
+ok. lets start by creating regular table
+
+CREATE TABLE sampling.pokemon_event_0
+(
+  id UInt64,
+  time DateTime,
+  type UInt16,
+  pokemon_id UInt16
+)
+ENGINE = MergeTree()
+PARTITION BY toYYYYMM(time)
+ORDER BY (toYYYYMM(time), id);
+
+Let's do some insert
+insert into pokemon_event_0 (id) values (1)
+insert into pokemon_event_0 (id) values (2)
+insert into pokemon_event_0 (id) values (3)
+
+checking:
+SELECT *
+FROM pokemon_event_0
+
+nothing special here
+
+let's try to sample from here
+SELECT *
+FROM pokemon_event_0
+SAMPLE 1/10
+and we get an error
+
+let's fix it with proper sampling talbe
+CREATE TABLE sampling.pokemon_event_1
+(
+  id UInt64,
+  time DateTime,
+  type UInt16,
+  pokemon_id UInt16
+)
+ENGINE = MergeTree()
+SAMPLE BY intHash32(id)
+PARTITION BY toYYYYMM(time)
+ORDER BY (toYYYYMM(time), intHash32(id));
+
+insert into pokemon_event_1 (id) values (1);
+insert into pokemon_event_1 (id) values (2);
+insert into pokemon_event_1 (id) values (3);
+insert into pokemon_event_1 (id) values (4);
+insert into pokemon_event_1 (id) values (5);
+insert into pokemon_event_1 (id) values (6);
+insert into pokemon_event_1 (id) values (7);
+insert into pokemon_event_1 (id) values (8);
+insert into pokemon_event_1 (id) values (9);
+insert into pokemon_event_1 (id) values (10);
+
+Now when we select from this table ch will return an evenly pseudorandom data sample
+
+SELECT count()
+FROM pokemon_event_1
+SAMPLE 0.1
+
+ok sort of makes sense. let's benchmark a bit
+create table without sampling support:
+CREATE TABLE sampling.pokemon_event_2
+(
+  id UInt64,
+  time DateTime,
+  type UInt16,
+  pokemon_id UInt16
+)
+ENGINE = MergeTree()
+PARTITION BY toYYYYMM(time)
+ORDER BY (toYYYYMM(time), intHash32(id));
+
+let's also do:
+TRUNCATE TABLE pokemon_event_1
+
+here's config for our inserter
+
+import datetime
+import random
+import sys
+
+TABLE_NAME = "pokemon_event_1"
+BULK_SIZE = 10
+EVENTS_PER_DAY = 10
+WORKERS = 10
+DB_NAME = "sampling"
+
+
+def generate_random_event(event_date: datetime.datetime) -> dict:
+    event_id = random.randint(0, sys.maxsize)
+    event_type = random.randint(0, 3)
+    pokemon_id = random.randint(0, 10)
+    event_datetime = event_date.replace(
+        hour=random.randint(0, 23),
+        minute=random.randint(0, 59))
+
+    return {
+        "id": event_id,
+        "time": event_datetime,
+        "type": event_type,
+        "pokemon_id": pokemon_id,
+        "location_id": pokemon_id}
+
+results:
+2019-01-06 09:09:47 - table: pokemon_event_1 - db: sampling - inserted: 3650 - took: 30.6 - bulk size: 10 - events per day: 10 - workers: 10
+2019-01-06 09:10:28 - table: pokemon_event_2 - db: sampling - inserted: 3650 - took: 27.58 - bulk size: 10 - events per day: 10 - workers: 10
+
+this would make sense to me since CH does a bit more when sampling is specified;
+lets compare performance for select though
+
+configs:
+NUMBER_BENCHMARK_RUNS = 3
+QUERY = "SELECT count() from sampling.pokemon_event_1 group by toYYYYMM(time)"
+and
+NUMBER_BENCHMARK_RUNS = 3
+QUERY = "SELECT count() from sampling.pokemon_event_2 group by toYYYYMM(time)"
+
+ 2019-01-06 09:17:05
+SELECT count() from sampling.pokemon_event_1 group by toYYYYMM(time)
+ attempt 0 took: 0.25376s
+ attempt 1 took: 0.10202s
+ attempt 2 took: 0.18261s
+
+ 2019-01-06 09:17:35
+SELECT count() from sampling.pokemon_event_2 group by toYYYYMM(time)
+ attempt 0 took: 0.31849s
+ attempt 1 took: 0.19644s
+ attempt 2 took: 0.14629s
+
+So what we observe here is performance decreases. CH apparently does more work to enable sampling
+Only use sampling to limit RAM, don't expecte to improve performance with using sampling
+https://groups.google.com/forum/#!topic/clickhouse/ad7YEo4oLNQ
+
+Good luck and let me know!
