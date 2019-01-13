@@ -51,3 +51,5 @@ INSERT INTO collapsing_merge_tree.pokemon_age_0 VALUES (2, 12, 'almost there aga
 INSERT INTO collapsing_merge_tree.pokemon_age_0 VALUES (2, 12, 'almost there enough', -1), (2, 13, 'almost there enough', 1);
 
 Use this table if you don't mind keeping all the state information at your inserter
+
+// TODO: check if only id will work

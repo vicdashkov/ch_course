@@ -1,4 +1,5 @@
 Backlog queue:
+http://www.defmacro.org/2017/01/18/why-rethinkdb-failed.html
 https://youtu.be/iQsKdtjwtYI
 https://www.howtogeek.com/howto/33949/htg-explains-what-is-encryption-and-how-does-it-work/
 https://blog.cloudflare.com/http-analytics-for-6m-requests-per-second-using-clickhouse/

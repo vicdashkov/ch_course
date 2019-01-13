@@ -27,11 +27,11 @@ def get_connection():
 
 
 async def write_to_event(data: list, _):
-    print(f"writing to {inserter_config.TABLE_NAME} {len(data)} rows")
+    global total_inserted_events
+    print(f"writing to {inserter_config.TABLE_NAME} {len(data)} rows; total count: {total_inserted_events}")
     conn_id, conn = get_connection()
     await conn.execute(f'INSERT INTO {inserter_config.DB_NAME}.{inserter_config.TABLE_NAME} VALUES', data)
 
-    global total_inserted_events
     total_inserted_events += len(data)
 
     return_connection(conn_id)

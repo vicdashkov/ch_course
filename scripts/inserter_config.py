@@ -2,11 +2,11 @@ import datetime
 import random
 import sys
 
-TABLE_NAME = "pokemon_event_2"
+TABLE_NAME = "event_distributed"
 BULK_SIZE = 10
 EVENTS_PER_DAY = 10
 WORKERS = 10
-DB_NAME = "sampling"
+DB_NAME = "losing_node"
 
 
 def generate_random_event(event_date: datetime.datetime) -> dict:
@@ -20,7 +20,6 @@ def generate_random_event(event_date: datetime.datetime) -> dict:
     return {
         "id": event_id,
         "time": event_datetime,
-        # "date": event_date.date(),
         "type": event_type,
-        "pokemon_id": pokemon_id,
-        "location_id": pokemon_id}
+        "pokemon_id": pokemon_id
+    }

@@ -1,0 +1,99 @@
+TODO: probably just add to cluster replication section
+
+ok lets dbl check that we still have our cluster working execute
+SELECT * FROM system.clusters
+
+should see
+┌─cluster─┬─shard_num─┬─shard_weight─┬─replica_num─┬─host_name─┬─host_address─┬─port─┬─is_local─┬─user────┬─default_database─┐
+│ pokemon │         1 │            1 │           1 │ ch1       │ 172.18.0.4   │ 9000 │        1 │ default │                  │
+│ pokemon │         1 │            1 │           2 │ ch2       │ 172.18.0.5   │ 9000 │        1 │ default │                  │
+│ pokemon │         2 │            1 │           1 │ ch3       │ 172.18.0.6   │ 9000 │        0 │ default │                  │
+│ pokemon │         2 │            1 │           2 │ ch4       │ 172.18.0.3   │ 9000 │        0 │ default │                  │
+└─────────┴───────────┴──────────────┴─────────────┴───────────┴──────────────┴──────┴──────────┴─────────┴──────────────────┘
+
+lets execute on all 4 nodes
+create database losing_node
+
+on ch1
+CREATE TABLE losing_node.event
+(
+  id UInt64,
+  time DateTime,
+  type UInt16,
+  pokemon_id UInt16
+)
+ENGINE = ReplicatedMergeTree('/clickhouse/tables/1/losing_node_event', 'ch1')
+PARTITION BY toYYYYMM(time)
+ORDER BY (toYYYYMM(time), id);
+
+on ch2
+CREATE TABLE losing_node.event
+(
+  id UInt64,
+  time DateTime,
+  type UInt16,
+  pokemon_id UInt16
+)
+ENGINE = ReplicatedMergeTree('/clickhouse/tables/1/losing_node_event', 'ch2')
+PARTITION BY toYYYYMM(time)
+ORDER BY (toYYYYMM(time), id);
+
+on ch3
+CREATE TABLE losing_node.event
+(
+  id UInt64,
+  time DateTime,
+  type UInt16,
+  pokemon_id UInt16
+)
+ENGINE = ReplicatedMergeTree('/clickhouse/tables/2/losing_node_event', 'ch3')
+PARTITION BY toYYYYMM(time)
+ORDER BY (toYYYYMM(time), id);
+
+on ch4
+CREATE TABLE losing_node.event
+(
+  id UInt64,
+  time DateTime,
+  type UInt16,
+  pokemon_id UInt16
+)
+ENGINE = ReplicatedMergeTree('/clickhouse/tables/2/losing_node_event', 'ch4')
+PARTITION BY toYYYYMM(time)
+ORDER BY (toYYYYMM(time), id);
+
+lets created distributed view on all nodes as well
+CREATE TABLE losing_node.event_distributed
+(
+  id UInt64,
+  time DateTime,
+  type UInt16,
+  pokemon_id UInt16
+)
+ENGINE = Distributed(pokemon, losing_node, event, rand())
+
+testing. can insert anywhere
+insert into event_distributed values(1, '2018-01-01 00:00:00', 11, 111)
+
+Ok, killing one done
+
+ATTACH TABLE losing_node.event
+(
+  id UInt64,
+  time DateTime,
+  type UInt16,
+  pokemon_id UInt16
+)
+ENGINE = ReplicatedMergeTree('/clickhouse/tables/2/losing_node_event', 'ch4')
+PARTITION BY toYYYYMM(time)
+ORDER BY (toYYYYMM(time), id);
+
+TODO: investigate why count still grows after inserter stops
+1) inserted 1 manually count 1
+2) inserted 365 count 365
+3) after restarting + 10 events. ok. maybe zookeeper count 375
+4) inserted 365 with 10 workers. suppose to be 740. count 823
+5) count for event on ch1 is 460. inserted into it. all good. count 1188
+6) inserting ~12040 to ch2; ch1 old count event is 825. new 12965 -- bad stuff
+7) ch1 event: 12965; event_distributed: 13328 -> inserting 3650 to event -> 16615/16978
+8) insertin 3650 to distr -> count: 21913
