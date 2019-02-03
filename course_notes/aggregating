@@ -116,3 +116,17 @@ SELECT sumMerge(types_sum) FROM aggregating.event_aggs
  attempt 2 took: 0.16787s
 
 TODO: bigger dataset; use other partition on work laptop
+
+TODO: maybe?
+SELECT sumForEach(x)
+FROM
+(
+    SELECT [1, 2] AS x
+    UNION ALL
+    SELECT [3, 4, 5]
+    UNION ALL
+    SELECT [6, 7]
+)
+┌─sumForEach(x)─┐
+│ [10,13,5]     │
+└───────────────┘

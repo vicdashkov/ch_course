@@ -1,6 +1,4 @@
-consider creating separate db for every lesson (id do so, use lesson codes, not number)
-Real use cases from industry. (take a look at altinity site)
-think of interesting stuff to query for like business insights
+Real use cases from industry. (take a look at altinity site) -- maybe for overview
 
 presentation "internals" has benchmark results for adding more nodes to cluster
 

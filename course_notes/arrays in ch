@@ -1,2 +1,110 @@
-* demonstrate arrayJoin and arrayMap
+create database arrays
 
+CREATE TABLE arrays.event
+(
+  id UInt64,
+  time DateTime,
+  type UInt16,
+  pokemon_ids Array(UInt16)
+)
+ENGINE = MergeTree()
+PARTITION BY toYYYYMM(time)
+ORDER BY (toYYYYMM(time), id);
+
+INSERT INTO arrays.event
+insert into event values(1, '2018-01-01 00:00:00', 1, [2222, 222, 777, 51228]);
+insert into event values(2, '2018-01-01 00:00:00', 1, [2222, 222]);
+insert into event values(3, '2018-01-01 00:00:00', 1, [2222]);
+
+SELECT *
+FROM event
+┌─id─┬────────────────time─┬─type─┬─pokemon_id─┐
+│  3 │ 2018-01-01 00:00:00 │    1 │ [2222]     │
+└────┴─────────────────────┴──────┴────────────┘
+┌─id─┬────────────────time─┬─type─┬─pokemon_id─┐
+│  2 │ 2018-01-01 00:00:00 │    1 │ [2222,222] │
+└────┴─────────────────────┴──────┴────────────┘
+┌─id─┬────────────────time─┬─type─┬─pokemon_id───────────┐
+│  1 │ 2018-01-01 00:00:00 │    1 │ [2222,222,777,51228] │
+└────┴─────────────────────┴──────┴──────────────────────┘
+
+We'll start simple with arrayMap
+SELECT
+    id,
+    arrayMap(pokemon_id -> dictGetString('pokemon_dict', 'name', toUInt64(pokemon_id)), pokemon_id) AS names
+FROM event
+┌─id─┬─names───────┐
+│  3 │ ['pikachu'] │
+└────┴─────────────┘
+┌─id─┬─names────────────────┐
+│  2 │ ['pikachu','malibu'] │
+└────┴──────────────────────┘
+┌─id─┬─names──────────────────────────────────┐
+│  1 │ ['pikachu','malibu','zalechu','bixby'] │
+└────┴────────────────────────────────────────┘
+
+straightforward enough
+Array join is a bit more interesting
+
+SELECT
+    id event_id,
+    dictGetString('pokemon_dict', 'name', toUInt64(arrayJoin(pokemon_id))) name,
+    arrayJoin(pokemon_id) `pokemon id`
+from event
+
+this in essence should be able to model regular Relational db design
+Lets make it cleaner with ARRAY JOIN clause
+
+SELECT
+    id event_id,
+    dictGetString('pokemon_dict', 'name', toUInt64(pokemon_id)) name,
+    pokemon_id `pokemon id`
+from event
+ARRAY JOIN pokemon_id
+
+More weirdness with arrayEnumerate which pretty much does
+SELECT
+    id AS event_id,
+    dictGetString('pokemon_dict', 'name', toUInt64(pokemon_id)) AS name,
+    pokemon_id AS `pokemon id`,
+    enum
+FROM event
+ARRAY JOIN
+    pokemon_id,
+    arrayEnumerate(pokemon_id) AS enum
+┌─event_id─┬─name────┬─pokemon id─┬─enum─┐
+│        3 │ pikachu │       2222 │    1 │
+└──────────┴─────────┴────────────┴──────┘
+┌─event_id─┬─name────┬─pokemon id─┬─enum─┐
+│        2 │ pikachu │       2222 │    1 │
+│        2 │ malibu  │        222 │    2 │
+└──────────┴─────────┴────────────┴──────┘
+┌─event_id─┬─name────┬─pokemon id─┬─enum─┐
+│        1 │ pikachu │       2222 │    1 │
+│        1 │ malibu  │        222 │    2 │
+│        1 │ zalechu │        777 │    3 │
+│        1 │ bixby   │      51228 │    4 │
+└──────────┴─────────┴────────────┴──────┘
+
+TODO: not sure if want to include this into lesson
+CREATE TABLE arrays.event_t
+(
+  id UInt64,
+  time DateTime,
+  types Array(UInt16),
+  pokemon_ids Array(UInt16)
+)
+ENGINE = MergeTree()
+PARTITION BY toYYYYMM(time)
+ORDER BY (toYYYYMM(time), id);
+
+insert into event_t values(1, '2018-01-01 00:00:00', [1, 2], [2222, 222, 777, 51228]);
+insert into event_t values(2, '2018-01-01 00:00:00', [1, 3], [2222, 222]);
+insert into event_t values(3, '2018-01-01 00:00:00', [1], [2222]);
+
+SELECT
+    id event_id,
+    arrayJoin(types),
+    dictGetString('pokemon_dict', 'name', toUInt64(arrayJoin(pokemon_ids))) name,
+    arrayJoin(pokemon_ids) `pokemon id`
+from event_t
