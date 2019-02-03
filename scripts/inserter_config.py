@@ -2,11 +2,11 @@ import datetime
 import random
 import sys
 
-TABLE_NAME = "event_distributed"
-BULK_SIZE = 10
-EVENTS_PER_DAY = 10
-WORKERS = 10
-DB_NAME = "losing_node"
+TABLE_NAME = "event"
+BULK_SIZE = 1000
+EVENTS_PER_DAY = 1000
+WORKERS = 5
+DB_NAME = "aggregating"
 
 
 def generate_random_event(event_date: datetime.datetime) -> dict:
