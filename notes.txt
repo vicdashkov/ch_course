@@ -1,3 +1,5 @@
+to make it less confusing, need to sync course_notes dir with the slides
+
 Real use cases from industry. (take a look at altinity site) -- maybe for overview
 
 presentation "internals" has benchmark results for adding more nodes to cluster
@@ -5,6 +7,8 @@ presentation "internals" has benchmark results for adding more nodes to cluster
 ?????transform????? https://clickhouse.yandex/docs/en/query_language/functions/other_functions/#transform
 
 Thing about ignore()
+
+set_max_parralel_meticsas
 
 possibly separate lesson on global:
 https://clickhouse.yandex/docs/en/query_language/select/#select-distributed-subqueries

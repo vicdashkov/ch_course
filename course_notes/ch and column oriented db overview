@@ -1,0 +1,37 @@
+* Companies that use CH
+
+Lesson objectives:
+* Benefits of column oriented DB
+* What CH promises
+
+Hello everyone.
+Ch has pretty good documentation, as I've mentioned or maybe not:)
+But we'll go through why you would want to use solution like CH
+
+-- message bird uses CH for event sourcing with collapsing merge tree
+-- cloudflare
+
+in production since 2012
+
+some cool numbers from Yandex
+The main cluster of Yandex.Metrica
+25 trillions of rows (as of Sep 2017)
+500 servers
+total throughput of query processing is up to two terabytes per second
+
+good stuff about ch file:///Users/viktordashkov/Repos/clickhouse-presentations/evolution/index_en.html#22
+
+CH good parts:
+- ingests huge amount of data in realtime
+- fast query processing (sub second)
+- Strong SQL
+- Scales very well vertically (link)
+- Horizontally scalable (link)
+- Open source
+
+CH bad parts:
+- eventual consistency
+- no transactions
+- single index
+- JOINs are not super
+- No deletes

@@ -1,0 +1,38 @@
+you talking on the nice background
+
+some slides
+some terminals
+some tabix.io
+
+The video should answer:
+1. Is this the right course for me?
+2. Is it covering the right stuff?
+3. Is this the right instructor?
+4. Am I going to be bored?
+
+3sec:
+    slide
+20sec welcome and instructor introduction:
+    I've been dealing with Clickhouse for more
+    than 2 year and there's so much
+    I want to share about this magnificent piece of technology
+20sec benefits:
+    I'll introduce you to the amazing world of extra big
+    data and tools to manage challanges associated with it.
+    You'll be able to develop your own system capable of processing
+    petabytes of data in seconds.
+20sec List of major components:
+    The course is designed to give gantle introduction
+    to the main CH features. All lectures sequentuallly positions
+    to expand and build on precedene lacture.
+    We'll cover main concepts starting with esential CH engines,
+    dictionaris and sampling, up untill CH replication and sharding
+15sec Target student description:
+    This course is perfect for someone with foundational skills
+    in sql and DB design. You will be able to undertake tasks that
+    involve huge ammouns of data, or improve current system that
+    is already huge.
+10sec Thank you & call to action:
+    Hit enroll and I'll see you on the other side where we will
+    experience one of the most powerful technologies
+    in the world of huge data.

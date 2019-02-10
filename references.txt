@@ -1,6 +1,0 @@
-Backlog queue:
-https://www.howtogeek.com/howto/33949/htg-explains-what-is-encryption-and-how-does-it-work/
-https://blog.cloudflare.com/http-analytics-for-6m-requests-per-second-using-clickhouse/
-
-References
-data distribution - https://www.altinity.com/blog/2017/6/5/clickhouse-data-distribution
