@@ -2,9 +2,19 @@ DO: Performance impact of single insert
 DO: TEST 3 DIFFERENT TABLES for partitioning and order by
 DO: demonstrate SHOW PROCESSLIST
 
-NOTE: better to get used to merge tree engine, sind data replication is only supported for these engines
+Hello everyone,
+In this lesson we'll talk about merge-tree family of CH engines
 
-CREATE TABLE pokemon.event -- mention this query will not work
+CH team reccomends using engines of this family pretty much for most tasks
+They say those engines are the most advanced engines,
+and data replication is possible only with engines from this family
+
+Let's connect to our newly configured ch cluster and try to create a table and a database
+
+CREATE DATABASE merge_tree
+
+I was tempted to create a table like so at first. cool kinds don't read the docs ha
+CREATE TABLE merge_tree.event
 (
   id UInt64,
   time DateTime,
@@ -12,8 +22,12 @@ CREATE TABLE pokemon.event -- mention this query will not work
   pokemon_id UInt16
 )
 ENGINE = MergeTree();
+But yeah this will fail
 
-CREATE TABLE pokemon.event_0_time_batch
+and the reason why it fails TODO
+
+We need to create a table like so
+CREATE TABLE merge_tree.event_time_batch
 (
   id UInt64,
   time DateTime,
@@ -24,7 +38,7 @@ ENGINE = MergeTree()
 PARTITION BY toYYYYMM(time)
 ORDER BY (time, id);  -- pay attention to order of fields
 
-CREATE TABLE pokemon.event_0_time_func_batch
+CREATE TABLE pokemon.even_time_func_batch
 (
   id UInt64,
   time DateTime,
@@ -35,7 +49,7 @@ ENGINE = MergeTree()
 PARTITION BY toYYYYMM(time)
 ORDER BY (toYYYYMM(time), id);
 
-CREATE TABLE pokemon.event_0_date_batch
+CREATE TABLE pokemon.event_date_batch
 (
   id UInt64,
   time DateTime,
