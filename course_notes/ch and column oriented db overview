@@ -1,39 +1,49 @@
-You need to reiterate all the same problems from promo video here
-
-* Companies that use CH
-
-Lesson objectives:
-* Benefits of column oriented DB
-* What CH promises
-
 Hello everyone.
-Ch has pretty good documentation, as I've mentioned or maybe not:)
-But we'll go through why you would want to use solution like CH
 
--- message bird uses CH for event sourcing with collapsing merge tree
--- cloudflare
+Companies like message bird, cloudflare and even CERN are using CH in production.
+Why?
 
-in production since 2012
+Well it super fast ans scalable. One of the reason is underlying techonlogy: CODB
 
-some cool numbers from Yandex
-The main cluster of Yandex.Metrica
-25 trillions of rows (as of Sep 2017)
+What is CODB and why do I want it?
+A column-oriented database stores each column continuously. each column will be stored
+in sequential blocks.
+What does it give us? it gives us data locality among other things
+
+Which we can visualise like this. This image is courtosy of Yandex.
+This has great benefits when we store on hard drives, Hard drives due to their
+characteristics provide optimal performace for sequential access
+
+Also, CH and CODB are designed to make use of Memory Alignemnt
+I've included great article from towardsdatascience for deeper yet digestible dive
+into this technique. As an example, with the help of memory alignment we can store
+S2 in only 24 bytes instead of 40 bytes for S1. It has to do with bits padding where we
+loose 7 bits for every boolean value.
+
+Exciting stuff
+
+And again Yandex provides some nice gifs to illustrate the points above
+In typical row oriented DB we need to process large ammount of unneded data
+
+In CODB we get only the data we need, less memory and, if we get it right, less CPU
+
+So underlying technology is good then. How about implementation?
+
+Well CH has good and bad parts about it, of course
+
+To summarise the slide above. You can put and process stuff in if FAST.
+Need more power get more nodes.
+some cool numbers from Yandex as of 2017
+25 trillions of rows
 500 servers
 total throughput of query processing is up to two terabytes per second
 
-good stuff about ch file:///Users/viktordashkov/Repos/clickhouse-presentations/evolution/index_en.html#22
+CH bad parts: this is not transactional DB. Consistency is not guarantted.
+Joins are not great, but there are worarouns)
+We've tried to delete 60G on staging. Didn' go very well
 
-CH good parts:
-- ingests huge amount of data in realtime
-- fast query processing (sub second)
-- Strong SQL
-- Scales very well vertically (link)
-- Horizontally scalable (link)
-- Open source
+If you think this technology covers your use cases, please hope it for a journey.
+See you next lesson.
 
-CH bad parts:
-- eventual consistency
-- no transactions
-- single index
-- JOINs are not super
-- No deletes
+TODO: POSSIBLY LINK: Scales very well vertically
+TODO: POSSIBLY LINK: Horizontally scalable
