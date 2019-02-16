@@ -18,19 +18,21 @@ The video should answer:
     I want to share about this magnificent piece of technology
 20sec benefits:
     I'll introduce you to the amazing world of extra big
-    data and tools to manage challanges associated with it.
+    data and tools to manage challenges associated with it.
     You'll be able to develop your own system capable of processing
     petabytes of data in seconds.
+    The course will grow to include more and more topics ranging
+    from beginners to advanced levels
 20sec List of major components:
-    The course is designed to give gantle introduction
-    to the main CH features. All lectures sequentuallly positions
-    to expand and build on precedene lacture.
-    We'll cover main concepts starting with esential CH engines,
-    dictionaris and sampling, up untill CH replication and sharding
+    The course is designed to give gentle introduction
+    to the main CH features. All lectures sequentially positions
+    to expand and build on preceding lecture.
+    We'll cover main concepts starting with essential CH engines,
+    dictionaries and sampling, up until CH replication and sharding
 15sec Target student description:
     This course is perfect for someone with foundational skills
     in sql and DB design. You will be able to undertake tasks that
-    involve huge ammouns of data, or improve current system that
+    involve huge amounts of data, or improve current system that
     is already huge.
 10sec Thank you & call to action:
     Hit enroll and I'll see you on the other side where we will
