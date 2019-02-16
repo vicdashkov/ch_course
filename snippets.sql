@@ -8,3 +8,6 @@ ENGINE = MergeTree(date, (id, date), 8192);
 
 SHOW PROCESSLIST
 
+SELECT *
+FROM system.functions
+WHERE lower(name) LIKE ‘%sort%'

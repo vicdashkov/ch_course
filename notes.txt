@@ -8,6 +8,8 @@ presentation "internals" has benchmark results for adding more nodes to cluster
 
 Thing about ignore()
 
+-- for sure "with" clause
+
 set_max_parralel_meticsas
 
 possibly separate lesson on global:

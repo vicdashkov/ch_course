@@ -24,9 +24,9 @@ CREATE TABLE merge_tree.event
 ENGINE = MergeTree();
 But yeah this will fail
 
-and the reason why it fails TODO
+and the reason why it fails is that wee need CH know about some of the extra meta data about our table
+These configs will be the main focus of this lecture
 
-We need to create a table like so
 CREATE TABLE merge_tree.event_time_batch
 (
   id UInt64,

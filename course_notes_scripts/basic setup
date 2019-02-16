@@ -1,17 +1,18 @@
-Lecture 1
+Ok, so first we begin by creating POC
 
-Ok, so first we begin by creating POC. I always wanted to create Pokemon business. 
-With Ch My dreams come true finally. For various aspects of my Pokemon business perhaps there’re other 
+I always wanted to create Pokemon business
+With Ch My dreams come true finally.
+For various aspects of my Pokemon business perhaps there’re other
 tools I can use, but when it comes to tracking evens associated with Pokemons, 
-I doubght there’s a better tool than CH. 
+I doubt there’s a better tool than CH.
 
 Ok, so for the POC the eisiest tool to start is Docker. We go to 
 https://hub.docker.com/r/yandex/clickhouse-server/ and there’s fairly standart stuff. 
 It looks like they suggest using client and server in combination. 
 Let’s take a closer look at commands thay provide  
 
-$ docker run -d --name some-clickhouse-server --ulimit nofile=262144:262144 yandex/clickhouse-server 
-$ docker run -it --rm --link some-clickhouse-server:clickhouse-server yandex/clickhouse-client --host clickhouse-server 
+docker run -d --name some-clickhouse-server --ulimit nofile=262144:262144 yandex/clickhouse-server
+docker run -it --rm --link some-clickhouse-server:clickhouse-server yandex/clickhouse-client --host clickhouse-server
 
 Ok, I run a first one. Eveerything seems to be fine so far. 
 Second one worked as well. We are connected. Lets take a look at what we have here 
@@ -25,8 +26,8 @@ SHOW DATABASES
 I select tables from these DBs. Default is empty and 
 system has 23 rows in set
 Ok. We’ll take a look at these guys at a later time. 
-As of now when I ran docker ps I see that ports are not open. 
-I also strongly suspect that persistence is not set. Let's first test my assumption about persistence.  
+As of now when I ran docker ps I see that ports are not open.
+I also strongly suspect that persistence is not set. Let's first test my assumption about persistence.
 
 Execute (and I’m sorry I looked up these commands beforehand:) )
 
@@ -44,6 +45,12 @@ Aha, there’s configs let’s look at them. And here’s where CH expects to pe
 Let’t add this volume to our docker. And perheps lets use docker compose  
 
 So our docker compose looks something like this now
+
+Let's also structure our config folder properly.
+it will greatly simplify our lives later on
+
+What I've done here is broken down our one big congif.xml into a bit more managable chunks
+
 version: '3'
 
 services:
@@ -52,6 +59,7 @@ services:
     restart: on-failure
     volumes:
       - './data/ch:/var/lib/clickhouse/'
+      - './ch_configs:/etc/clickhouse-server/'
     ports:
       - 9000:9000
       - 8123:8123
@@ -62,11 +70,22 @@ services:
     image: yandex/clickhouse-client:18.14.15
 
 And if we kill docker container and then start it again we see our data is still there. Ok. good start.
-I've got so many events I need to put in there. Let's start.
 
-First let's define schema for my Pokemon events. I have no idea as to final structure of this table (agile)
-So I'll start simple. CH docs say merge tree is the best best table out there for most purposes. 
-I'll take is as true and start from there.
+And now inside
+/etc/clickhouse-server/users.xml
 
-Creating database first
-CREATE DATABASE pokemon
+-- add this:
+<vic>
+    <password>12345</password>
+    <networks incl="networks" replace="replace">
+        <ip>::/1</ip>
+    </networks>
+    <profile>default</profile>
+    <quota>default</quota>
+</vic>
+
+and we should be able to connect to db like so
+docker-compose run --rm client ch1 user vic password 12345
+
+if we also add client-config.xml to our project root we should be able to spare our admins' health on not
+exposing passwords
