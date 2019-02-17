@@ -2,8 +2,8 @@ merge tree settings:
  https://github.com/yandex/ClickHouse/blob/master/dbms/src/Storages/MergeTree/MergeTreeSettings.h
 
 default configs:
-- https://github.com/yandex/ClickHouse/blob/master/dbms/programs/server/
-- https://github.com/yandex/ClickHouse/blob/master/docker/server/docker_related_config.xml
+https://github.com/yandex/ClickHouse/blob/master/dbms/programs/server/
+https://github.com/yandex/ClickHouse/blob/master/docker/server/docker_related_config.xml
 
 
 <insert_quorum>
