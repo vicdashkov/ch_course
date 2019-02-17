@@ -7,7 +7,8 @@ tools I can use, but when it comes to tracking evens associated with Pokemons,
 I doubt there’s a better tool than CH.
 
 Ok, so for the POC the eisiest tool to start is Docker. We go to 
-https://hub.docker.com/r/yandex/clickhouse-server/ and there’s fairly standart stuff. 
+https://hub.docker.com/r/yandex/clickhouse-server/
+and there’s fairly standart stuff.
 It looks like they suggest using client and server in combination. 
 Let’s take a closer look at commands thay provide  
 
