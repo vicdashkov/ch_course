@@ -1,21 +1,34 @@
 Hi everyone to our next lesson
 
-Ok, so first we begin by creating POC
+Ok, so first we begin by creating POC,
+that is we're not sure about the technology and wee need to play with it first,
+see what it is and what we can do with it.
 
 I always wanted to create Pokemon business
-With Ch My dreams come true finally.
-For various aspects of my Pokemon business perhaps there’re other
+With Ch My dreams come true, finally.
+For various aspects of my Pokemon business there’re other
 tools I can use, but when it comes to tracking evens associated with Pokemons, 
 I doubt there’s a better tool than CH.
 
-Ok, so for the POC the eisiest tool to start is Docker. We go to 
-https://hub.docker.com/r/yandex/clickhouse-server/
-and there’s fairly standart stuff.
-It looks like they suggest using client and server in combination. 
-Let’s take a closer look at commands thay provide  
+Yeah main theme of this course will be pokemons. why not. mind you I'm not a fun
+and have never seen as single episode of this animated series, so there will be
+factual errors about the piece on my side
 
-docker run -d --name some-clickhouse-server --ulimit nofile=262144:262144 yandex/clickhouse-server
-docker run -it --rm --link some-clickhouse-server:clickhouse-server yandex/clickhouse-client --host clickhouse-server
+Ok, so for the POC the easiest tool to start is Docker. We go to
+https://hub.docker.com/r/yandex/clickhouse-server/
+and there’s fairly standard stuff.
+They give us commands to start a serve and to connect a client to it
+Let’s take a closer look at commands they provide
+
+server:
+-d -> start as deamon
+--name -> give our container a name
+--ulimit nofile -> number of open files
+
+client:
+-it -> run our container as a console
+--rm -> clenup the system after exit
+--link -> link of course is to connect to another container. server in our case
 
 Ok, I run a first one. Eveerything seems to be fine so far. 
 Second one worked as well. We are connected. Lets take a look at what we have here 
@@ -28,23 +41,43 @@ SHOW DATABASES
 
 I select tables from these DBs. Default is empty and 
 system has 23 rows in set
-Ok. We’ll take a look at these guys at a later time. 
+Ok. We’ll take a look at some of these guys at a later time.
 As of now when I ran docker ps I see that ports are not open.
-I also strongly suspect that persistence is not set.
+I also strongly suspect that persistence is not set. dah
 
 CH expects to persist data
 (/var/lib/clickhouse/). 
-Let’t add this volume to our docker. And perheps lets use docker compose  
+Let’t add this volume to our docker. And perheps lets use docker compose
+to simplify things
 
 Let's also structure our config folder properly.
+So I created some basic setup for us
 it will greatly simplify our lives later on
 
-What I've done here is broken down our one big congif.xml into a bit more managable chunks
+What I've done here is broken down our one big congif.xml
+into a bit more managable chunks
+users configs is now a separate file, and we'll be able to add more configs
+as separate .xml files. should make it a bit easier to manage
+currently, in our users.xml, I create user by the name vic with some simple password
+you can add as many users to this config as you want, without the need
+to restart the server.
 
-and we should be able to connect to db like so
+in docker compose we've got all the same thing as in that docker run command,
+but we've also added volumes. restart policy and we've opend ports.
+of course we've specified tag for docker images
+
+as you can see I also attach client config to our client image,
+so we don't have to type password all the time. This will also spare our admins'
+health a bit couse they won't have to see plain password in logs:)
+
+and we should be able to connect to db like so with password
 docker-compose run --rm client ch1 user vic password 12345
 
-if we also add client-config.xml to our project root we should be able to spare our admins' health on not
-exposing passwords
+or just
+docker-compose run --rm client ch1
+and our client config should kick in
 
-oh and by the way settings like adding user will be hot reloaded by ch, so that's nice.
+there another client you can use. it's called tabix.io
+and if we had to the website, we'll be able to use web app to connect to our
+docker installation, I think this is a good but a bit raw tool.
+you can give a try, but in this course we'll be mostly using cli
