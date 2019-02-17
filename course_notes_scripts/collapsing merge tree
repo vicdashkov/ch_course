@@ -1,34 +1,47 @@
 Hi everyone.
 Today we'll talk about collapsing merge tree
 This is an interesting engine. At my place we used it because at some point CH didn't support updates
-And for one of our tables it sort of made sense. We still use it, but now we can make due without it.
+And for one of our tables it sort of made sense.
+We still use it, but developer we can make due without it.
 
-I still think It's important to talk about it, and show in graphical way what is going on.
+I still think It's important to talk about it, since there are use cases for it
 Let's start
 
 ok so ch documentation has pretty good overview and explanation of this topic
-There's also additional link I'll submit here with some more discussion on the topic
-https://groups.google.com/forum/#!topic/clickhouse/VixyOUD-K68
+There's also additional link attached with some more discussion on the topic
 
-To start let's create a table
+Let's by creating a table
 
 create database collapsing_merge_tree;
 
-CREATE TABLE collapsing_merge_tree.pokemon_age_0
+CREATE TABLE collapsing_merge_tree.pokemon_age
 (
     pokemon_id UInt64,
     age UInt8,
     health String,
-    sign Int8
+    sign Int8 DEFAULT 1
 )
 ENGINE = CollapsingMergeTree(sign)
 ORDER BY pokemon_id
 
+I strogly suggest using default value for sign, if you insert
+any other value instead of -1 or 1, you see pretty ugly error
+and CH won't be able to ever collapse the table
+
 And I know this is super contrived example, but please bear with me
 
-INSERT INTO collapsing_merge_tree.pokemon_age_0 VALUES (1, 1, 'good', 1);
-INSERT INTO collapsing_merge_tree.pokemon_age_0 VALUES (1, 1, 'good', -1);
-INSERT INTO collapsing_merge_tree.pokemon_age_0 VALUES (1, 2, 'mhe', 1);
+INSERT INTO collapsing_merge_tree.pokemon_age VALUES (1, 1, 'good', 1);
+INSERT INTO collapsing_merge_tree.pokemon_age VALUES (1, 1, 'good', -1);
+INSERT INTO collapsing_merge_tree.pokemon_age VALUES (1, 2, 'mhe', 1);
+
+
+
+
+INSERT INTO collapsing_merge_tree.pokemon_age VALUES (1, 5, 'mhe', -1);
+INSERT INTO collapsing_merge_tree.pokemon_age VALUES (1, 6, 'mhe', 1);
+
+
+
 
 lets test our table
 
@@ -36,20 +49,38 @@ SELECT
     pokemon_id,
     sum(age * sign) AS age,
     anyLast(health) as health
-FROM collapsing_merge_tree.pokemon_age_0
+FROM collapsing_merge_tree.pokemon_age
 GROUP BY pokemon_id
 HAVING sum(sign) > 0
 
-SELECT * FROM pokemon_age_0 FINAL
+SELECT * FROM pokemon_age FINAL
 
 let's test assumption that data never merges if we insert with one data part
-INSERT INTO collapsing_merge_tree.pokemon_age_0 VALUES (2, 10, 'mhe', 1), (2, 10, 'mhe', -1), (2, 11, 'almost there', 1);
+INSERT INTO collapsing_merge_tree.pokemon_age VALUES (2, 10, 'mhe', 1), (2, 10, 'mhe', -1), (2, 11, 'almost there', 1);
 
 and more
-INSERT INTO collapsing_merge_tree.pokemon_age_0 VALUES (2, 11, 'almost there', -1), (2, 12, 'almost there again', 1);
-INSERT INTO collapsing_merge_tree.pokemon_age_0 VALUES (2, 12, 'almost there again', -1), (2, 12, 'almost there enough', 1);
-INSERT INTO collapsing_merge_tree.pokemon_age_0 VALUES (2, 12, 'almost there enough', -1), (2, 13, 'almost there enough', 1);
+INSERT INTO collapsing_merge_tree.pokemon_age VALUES (2, 11, 'almost there', -1), (2, 12, 'almost there again', 1);
+INSERT INTO collapsing_merge_tree.pokemon_age VALUES (2, 12, 'almost there again', -1), (2, 12, 'almost there enough', 1);
+INSERT INTO collapsing_merge_tree.pokemon_age VALUES (2, 12, 'almost there enough', -1), (2, 13, 'almost there enough', 1);
+INSERT INTO collapsing_merge_tree.pokemon_age VALUES (2, 13, 'almost there enough', -1), (2, 14, 'almost there enough', 1);
+INSERT INTO collapsing_merge_tree.pokemon_age VALUES (2, 14, 'almost there enough', -1), (2, 15, 'almost there enough', 1);
 
 Use this table if you don't mind keeping all the state information at your inserter
 
-// TODO: check if only id will work
+you can also insert values like this
+INSERT INTO collapsing_merge_tree.pokemon_age VALUES (10, 1, 'tantachu', 1);
+INSERT INTO collapsing_merge_tree.pokemon_age VALUES (10, 2, 'tantachu', 1);
+INSERT INTO collapsing_merge_tree.pokemon_age VALUES (10, 3, 'tantachu', 1);
+INSERT INTO collapsing_merge_tree.pokemon_age VALUES (10, 4, 'tantachu', 1);
+INSERT INTO collapsing_merge_tree.pokemon_age VALUES (10, 5, 'tantachu', 1);
+INSERT INTO collapsing_merge_tree.pokemon_age VALUES (10, 6, 'tantachu', 1);
+INSERT INTO collapsing_merge_tree.pokemon_age VALUES (10, 7, 'tantachu', 1);
+INSERT INTO collapsing_merge_tree.pokemon_age VALUES (10, 8, 'tantachu', 1);
+INSERT INTO collapsing_merge_tree.pokemon_age VALUES (10, 9, 'tantachu', 1);
+
+and if you execute
+SELECT * FROM pokemon_age FINAL
+you'll see correct results,
+but the data will never collapse, so essentialy you defeat the
+purpose of the engine
+

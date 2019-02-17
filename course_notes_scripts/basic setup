@@ -71,10 +71,10 @@ so we don't have to type password all the time. This will also spare our admins'
 health a bit couse they won't have to see plain password in logs:)
 
 and we should be able to connect to db like so with password
-docker-compose run --rm client ch1 user vic password 12345
+docker-compose run --rm client --host ch user vic password 12345
 
 or just
-docker-compose run --rm client ch1
+docker-compose run --rm client --host ch
 and our client config should kick in
 
 there another client you can use. it's called tabix.io
