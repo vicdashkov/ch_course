@@ -15,7 +15,7 @@ pool = {}
 
 def create_pool():
     for i in range(inserter_config.WORKERS):
-        client = Client('localhost', secure=True, ca_certs='./server.crt')
+        client = Client(inserter_config.HOST)
         pool[i] = {"c": client, "a": True}
 
 

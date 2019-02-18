@@ -2,11 +2,12 @@ import datetime
 import random
 import sys
 
-TABLE_NAME = "event"
+HOST = "localhost"
+TABLE_NAME = "event_time_batch"
 BULK_SIZE = 1000
-EVENTS_PER_DAY = 1000
+EVENTS_PER_DAY = 1000000
 WORKERS = 5
-DB_NAME = "aggregating"
+DB_NAME = "merge_tree"
 
 
 def generate_random_event(event_date: datetime.datetime) -> dict:
