@@ -1,3 +1,13 @@
+preparation:
+* remove all dockers
+* presentation in separe desckotop (right)
+* vs code in separate descktop (left)
+* browser with docker hub
+* remove propocessed
+* delete data folder
+* open tabix.io
+* docker rm
+
 Hi everyone to our next lesson
 
 Ok, so first we begin by creating POC,
@@ -5,14 +15,14 @@ that is we're not sure about the technology and wee need to play with it first,
 see what it is and what we can do with it.
 
 I always wanted to create Pokemon business
-With Ch My dreams come true, finally.
-For various aspects of my Pokemon business there’re other
+And With Ch My dreams come true, finally.
+Anyway, For various aspects of my Pokemon business there’re other
 tools I can use, but when it comes to tracking evens associated with Pokemons, 
 I doubt there’s a better tool than CH.
 
 Yeah main theme of this course will be pokemons. why not. mind you I'm not a fun
 and have never seen as single episode of this animated series, so there will be
-factual errors about the piece on my side
+factual errors about the piece. sorry in advance.
 
 Ok, so for the POC the easiest tool to start is Docker. We go to
 https://hub.docker.com/r/yandex/clickhouse-server/
@@ -42,13 +52,17 @@ SHOW DATABASES
 I select tables from these DBs. Default is empty and 
 system has 23 rows in set
 Ok. We’ll take a look at some of these guys at a later time.
-As of now when I ran docker ps I see that ports are not open.
+As of now lets come back to docker.
+when I ran docker ps I see that ports are not open.
 I also strongly suspect that persistence is not set. dah
 
-CH expects to persist data
-(/var/lib/clickhouse/). 
-Let’t add this volume to our docker. And perheps lets use docker compose
-to simplify things
+to remedy all this problems and to simplify development lets create docker compose.
+Which will look like this
+
+talk about docker-compose
+talk about ch_configs
+
+stop all containers
 
 Let's also structure our config folder properly.
 So I created some basic setup for us
@@ -81,3 +95,6 @@ there another client you can use. it's called tabix.io
 and if we had to the website, we'll be able to use web app to connect to our
 docker installation, I think this is a good but a bit raw tool.
 you can give a try, but in this course we'll be mostly using cli
+
+We'll wrap this lesson here
+Thank you so much and see you next lesson
