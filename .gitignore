@@ -117,3 +117,5 @@ users-preprocessed.xml
 *.crt
 *.pem
 *.key
+
+data/
