@@ -23,3 +23,5 @@
 2019-01-13 09:35:40 - table: event - db: losing_node - inserted: 365 - took: 68.52 - bulk size: 1 - events per day: 1 - workers: 10
 2019-01-13 10:00:38 - table: event - db: losing_node - inserted: 3650 - took: 82.55 - bulk size: 10 - events per day: 10 - workers: 10
 2019-01-13 10:05:21 - table: event_distributed - db: losing_node - inserted: 3650 - took: 107.76 - bulk size: 10 - events per day: 10 - workers: 10
+
+2019-02-18 14:29:26 - table: event_time_batch - db: merge_tree - inserted: 365000000 - took: 5143.1 - bulk size: 1000 - events per day: 1000000 - workers: 5

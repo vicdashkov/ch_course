@@ -3,8 +3,8 @@ import random
 import sys
 
 HOST = "localhost"
-TABLE_NAME = "event_time_batch"
-BULK_SIZE = 1000
+TABLE_NAME = "event_time_single"
+BULK_SIZE = 10
 EVENTS_PER_DAY = 1000000
 WORKERS = 5
 DB_NAME = "merge_tree"

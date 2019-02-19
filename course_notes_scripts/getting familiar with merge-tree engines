@@ -1,7 +1,8 @@
 Preparation:
-* open slides on the left
-* open code editor on the righ
-* start ch in code editor
+* pull down all dockers
+* code editor scrips - code editor project files - slides
+* start ch in backgroud
+* setup inserter config
 
 DO: demonstrate SHOW PROCESSLIST
 
@@ -9,42 +10,35 @@ Hello everyone,
 In this lesson we'll talk about merge-tree family of CH engines
 
 CH team reccomends using engines of this family pretty much for most tasks
-They say those engines are the most advanced engines,
+They say those engines are the most advanced and feature reach
 and data replication is possible only with engines from this family
 
-There are other engines as well, and we'll talk about them, but chances are
+There are other engines as well, and we'll talk about them in due time, but chances are
 you'll start with some kind of merge tree table and stick to it for a long time
 
 Let's connect to our newly configured ch instance
 and try to create a table and a database
 
-CREATE DATABASE merge_tree
-
-CREATE TABLE merge_tree.event
-(
-  id UInt64,
-  time DateTime,
-  type UInt16,
-  pokemon_id UInt16
-)
-ENGINE = MergeTree();
 I was tempted to create a table like so at first. cool kinds don't read the docs, ha
 But yeah this will fail
 
 and the reason why it fails is that we need to let CH know about
-some of the extra meta data about our table
+some of the configs for this table
 These configs will be the main focus of this lecture
 
-If we look at this slide we clearly see the difference
-one table has date field and the other one doesn't.
-The deal is we have to specify order by columns and partition by columns,
+If we look at called experimet_tables.sql
+that you'll find in course files, you'll notice that there are of course different
+ways to setup partitionain and order by for our tables
+
 and I've seen people use date column for partition,
+This seems to be not the best idea for CH, because it like to have pretty sparse indexes
 so essentially we'd have to store 2 date columns: time and date.
 Now documentation is pretty clear on it, but in older days this was what people did
-I think we can benchmark different setup and then try to make sense of it
+and they are stuck with it on production
+
+We will benchmark different setup and then try to make sense of it
 I'be prepared different combinations for paprtitioning and order by in this
-gist:
-https://gist.github.com/vicdashkov/40e8892a878beb866d787316a3a52a29
+in the file called experiment_tables.sql, which you'll find in course files
 
 It's about time I intorduce you to 2 small scripts to kind of dirty
 benchmark our tables:
