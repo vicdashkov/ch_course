@@ -1,5 +1,5 @@
 Preparation:
-* pull down all dockers
+* put down all dockers
 * code editor scrips - code editor project files - slides
 * start ch in backgroud
 * setup inserter config
@@ -26,41 +26,21 @@ and the reason why it fails is that we need to let CH know about
 some of the configs for this table
 These configs will be the main focus of this lecture
 
-If we look at called experimet_tables.sql
+If we look at file called experiments_tables.sql
 that you'll find in course files, you'll notice that there are of course different
 ways to setup partitionain and order by for our tables
 
-and I've seen people use date column for partition,
-This seems to be not the best idea for CH, because it like to have pretty sparse indexes
-so essentially we'd have to store 2 date columns: time and date.
-Now documentation is pretty clear on it, but in older days this was what people did
-and they are stuck with it on production
+What is event worse, in older days docs would say
+    A MergeTree table must have a separate column containing the date. Here,
+    it is the EventDate column. The date column must have the 'Date' type (not 'DateTime').
+So what do we do?
 
-We will benchmark different setup and then try to make sense of it
-I'be prepared different combinations for paprtitioning and order by in this
-in the file called experiment_tables.sql, which you'll find in course files
+We will benchmark different setups and then try to make sense of it
 
 It's about time I intorduce you to 2 small scripts to kind of dirty
-benchmark our tables:
-TODO: LINK TO REPO
+benchmark our tables. You can find a link to gitgub in the lecture references
 
 ok. I'll run the test and we'll come back to results once it's done
-
-https://gist.github.com/sanchezzzhak/511fd140e8809857f8f1d84ddb937015
-SELECT table, formatReadableSize(size) as size, rows, days, formatReadableSize(avgDaySize) as avgDaySize FROM (
-    SELECT
-        table,
-        sum(bytes) AS size,
-        sum(rows) AS rows,
-        min(min_date) AS min_date,
-        max(max_date) AS max_date,
-        (max_date - min_date) AS days,
-        size / (max_date - min_date) AS avgDaySize
-    FROM system.parts
-    WHERE active
-    GROUP BY table
-    ORDER BY rows DESC
-)
 
 ┌─table───────────────────┬─size───────┬─rows─┬
 │ event_0_time_batch      │ 144.05 KiB │ 8900 │
@@ -78,7 +58,10 @@ SELECT count() from event_0_time_batch group by toYYYYMM(time) 2.677s 2.240s 3.2
 SELECT count() from event_0_date_batch group by toYYYYMM(date) 2.219s 1.797s 2.073s
 SELECT count() from event_0_time_func_batch group by toYYYYMM(time) 0.250s 0.159s 0.147s
 
-SUMMARY: seems don't have to use date anymore (used to have to like us) https://github.com/yandex/ClickHouse/issues/2802
+SUMMARY: seems don't have to use separate date anymore
+better yet to use toYYYYMM() function to make partition even sparser
 and please don't use single inserts
 actually i've seen very weird behaviour from ch with many single inserts. you can kill
 you server easy
+
+TODO: for this benchmark create repo not inside git
