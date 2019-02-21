@@ -63,5 +63,3 @@ better yet to use toYYYYMM() function to make partition even sparser
 and please don't use single inserts
 actually i've seen very weird behaviour from ch with many single inserts. you can kill
 you server easy
-
-TODO: for this benchmark create repo not inside git
