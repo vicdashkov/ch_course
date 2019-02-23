@@ -1,6 +1,5 @@
-TODO: BENCHMARD: dict in dict syntax and as engine https://clickhouse.yandex/docs/en/operations/table_engines/dictionary/
 
--- Function of dict in my place is two fold: holding results of heavy jobs, and fast lookup at the same time
+-- Function of dict could be two fold: holding results of heavy jobs, and fast lookup at the same time
 
 -- CH recommends to use flat, hashed and complex_key_hashed. which provide optimal processing speed.
 
