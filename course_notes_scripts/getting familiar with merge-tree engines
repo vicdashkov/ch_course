@@ -49,10 +49,12 @@ ok. I'll run the test and we'll come back to results once it's done
 │ event_0_date_single     │ 308.38 KiB │ 1780 │
 └─────────────────────────┴────────────┴──────┴
 
-2018-12-16 15:13:16 - table: event_0_date_batch - inserted: 8900 - took: 168.58 - bulk size: 5 - events per day: 25 - workers: 10
-2018-12-16 15:18:52 - table: event_0_date_single - inserted: 1780 - took: 166.67 - bulk size: 1 - events per day: 5 - workers: 10
-2018-12-16 15:25:06 - table: event_0_time_batch - inserted: 8900 - took: 155.42 - bulk size: 5 - events per day: 25 - workers: 10
-2018-12-16 15:29:01 - table: event_0_time_func_batch - inserted: 8900 - took: 159.49 - bulk size: 5 - events per day: 25 - workers: 10
+2019-02-22 20:04:52 - table: event_time_batch - db: merge_tree - inserted: 365000000 - took: 3622.57 - bulk size: 100000 - events per day: 1000000 - workers: 10
+2019-02-22 21:18:53 - table: event_time_single - db: merge_tree - inserted: 365000000 - took: 4441.38 - bulk size: 1000 - events per day: 1000000 - workers: 10
+2019-02-22 22:18:38 - table: even_time_order_func_batch - db: merge_tree - inserted: 365000000 - took: 3582.08 - bulk size: 100000 - events per day: 1000000 - workers: 10
+2019-02-22 23:30:10 - table: even_time_order_func_single - db: merge_tree - inserted: 365000000 - took: 4291.91 - bulk size: 1000 - events per day: 1000000 - workers: 10
+2019-02-23 00:32:53 - table: event_date_batch - db: merge_tree - inserted: 365000000 - took: 3760.28 - bulk size: 100000 - events per day: 1000000 - workers: 10
+2019-02-23 01:49:00 - table: event_date_single - db: merge_tree - inserted: 365000000 - took: 4566.77 - bulk size: 1000 - events per day: 1000000 - workers: 10
 
 SELECT count() from event_0_time_batch group by toYYYYMM(time) 2.677s 2.240s 3.273s
 SELECT count() from event_0_date_batch group by toYYYYMM(date) 2.219s 1.797s 2.073s
