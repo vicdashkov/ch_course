@@ -63,8 +63,6 @@ INSERT INTO collapsing_merge_tree.pokemon_age VALUES (10, 9, 'yep, ready', 1);
 and if you execute
 SELECT * FROM pokemon_age FINAL
 you'll see correct results,
-but the data will never collapse, so essentialy you defeat the
-purpose of the engine
 
 ok so ch documentation has pretty good overview and explanation of this topic
 There's also additional link attached with some more discussion on the topic

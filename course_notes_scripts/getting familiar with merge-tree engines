@@ -1,10 +1,9 @@
 Preparation:
 * put down all dockers
 * code editor scrips - code editor project files - slides
+* tabix
 * start ch in backgroud
 * setup inserter config
-
-DO: demonstrate SHOW PROCESSLIST
 
 Hello everyone,
 In this lesson we'll talk about merge-tree family of CH engines
@@ -57,6 +56,9 @@ even_time_order_func_batch - took: 3582.08 - bulk size: 100000 - events per day:
 even_time_order_func_single - took: 4291.91 - bulk size: 1000 - events per day: 1000000 - workers: 10
 event_date_batch - took: 3760.28 - bulk size: 100000 - events per day: 1000000 - workers: 10
 event_date_single - took: 4566.77 - bulk size: 1000 - events per day: 1000000 - workers: 10
+
+
+and results are TODO
 
 SUMMARY: seems don't have to use separate date anymore
 better yet to use toYYYYMM() function to make partition even sparser
