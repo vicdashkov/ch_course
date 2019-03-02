@@ -1,3 +1,4 @@
+-- tabix tab 1
 CREATE DATABASE merge_tree;
 
 CREATE TABLE merge_tree.event
@@ -7,9 +8,11 @@ CREATE TABLE merge_tree.event
   type UInt16,
   pokemon_id UInt16
 )
-ENGINE = MergeTree();
--- this won’t work
+ENGINE = MergeTree(); -- this won’t work
 
+-- tab 2 in experiment_tables.sql
+
+-- tab 3
 SELECT table, formatReadableSize(size) as size, rows, days, formatReadableSize(avgDaySize) as avgDaySize FROM (
     SELECT
         table,
@@ -23,6 +26,6 @@ SELECT table, formatReadableSize(size) as size, rows, days, formatReadableSize(a
     WHERE active
     GROUP BY table
     ORDER BY rows DESC
-);
+)
 
 

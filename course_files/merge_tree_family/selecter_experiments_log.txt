@@ -13,13 +13,13 @@ SELECT count() from merge_tree.event_time_single group by toYYYYMM(time)
  attempt 2 took: 0.77496s
 
  2019-02-24 08:48:14
-SELECT count() from merge_tree.even_time_order_func_batch group by toYYYYMM(time)
+SELECT count() from merge_tree.event_time_order_func_batch group by toYYYYMM(time)
  attempt 0 took: 15.66397s
  attempt 1 took: 1.02219s
  attempt 2 took: 1.00333s
 
  2019-02-24 08:48:31
-SELECT count() from merge_tree.even_time_order_func_single group by toYYYYMM(time)
+SELECT count() from merge_tree.event_time_order_func_single group by toYYYYMM(time)
  attempt 0 took: 22.23479s
  attempt 1 took: 0.99811s
  attempt 2 took: 0.98971s
@@ -63,13 +63,13 @@ SELECT count() from merge_tree.event_time_single group by toYYYYMM(time)
  attempt 2 took: 0.80319s
 
  2019-02-24 08:55:19
-SELECT count() from merge_tree.even_time_order_func_batch group by toYYYYMM(time)
+SELECT count() from merge_tree.event_time_order_func_batch group by toYYYYMM(time)
  attempt 0 took: 0.99285s
  attempt 1 took: 1.00615s
  attempt 2 took: 1.0054s
 
  2019-02-24 08:55:22
-SELECT count() from merge_tree.even_time_order_func_single group by toYYYYMM(time)
+SELECT count() from merge_tree.event_time_order_func_single group by toYYYYMM(time)
  attempt 0 took: 1.00525s
  attempt 1 took: 1.00553s
  attempt 2 took: 1.02658s
@@ -113,13 +113,13 @@ SELECT count() from merge_tree.event_time_single group by toYYYYMM(time)
  attempt 2 took: 0.77175s
 
  2019-02-24 14:21:07
-SELECT count() from merge_tree.even_time_order_func_batch group by toYYYYMM(time)
+SELECT count() from merge_tree.event_time_order_func_batch group by toYYYYMM(time)
  attempt 0 took: 19.88856s
  attempt 1 took: 1.00056s
  attempt 2 took: 0.97449s
 
  2019-02-24 14:21:29
-SELECT count() from merge_tree.even_time_order_func_single group by toYYYYMM(time)
+SELECT count() from merge_tree.event_time_order_func_single group by toYYYYMM(time)
  attempt 0 took: 21.62187s
  attempt 1 took: 1.00486s
  attempt 2 took: 0.96196s
@@ -176,13 +176,13 @@ SELECT count() from merge_tree.event_date_batch group by toYYYYMM(time)
  attempt 2 took: 1.06446s
 
  2019-02-24 14:30:02
-SELECT count() from merge_tree.even_time_order_func_single group by toYYYYMM(time)
+SELECT count() from merge_tree.event_time_order_func_single group by toYYYYMM(time)
  attempt 0 took: 0.99066s
  attempt 1 took: 1.01955s
  attempt 2 took: 0.9896s
 
  2019-02-24 14:30:05
-SELECT count() from merge_tree.even_time_order_func_batch group by toYYYYMM(time)
+SELECT count() from merge_tree.event_time_order_func_batch group by toYYYYMM(time)
  attempt 0 took: 1.00744s
  attempt 1 took: 0.99867s
  attempt 2 took: 1.00459s

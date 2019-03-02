@@ -21,7 +21,7 @@ ENGINE = MergeTree()
 PARTITION BY toYYYYMM(time)
 ORDER BY (time, id);
 
-CREATE TABLE merge_tree.even_time_order_func_batch
+CREATE TABLE merge_tree.event_time_order_func_batch
 (
   id UInt64,
   time DateTime,
@@ -32,7 +32,7 @@ ENGINE = MergeTree()
 PARTITION BY toYYYYMM(time)
 ORDER BY (toYYYYMM(time), id);
 
-CREATE TABLE merge_tree.even_time_order_func_single
+CREATE TABLE merge_tree.event_time_order_func_single
 (
   id UInt64,
   time DateTime,

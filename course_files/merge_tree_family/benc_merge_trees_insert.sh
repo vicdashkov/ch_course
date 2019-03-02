@@ -14,18 +14,18 @@ export HAS_DATE_COLUMN=0
 export EVENTS_PER_DAY=1000000
 python inserter.py
 
-export TABLE_NAME=even_time_order_func_batch
+export TABLE_NAME=event_time_order_func_batch
 export BULK_SIZE=100000
 export DB_NAME=merge_tree
 export HAS_DATE_COLUMN=0
 export EVENTS_PER_DAY=1000000
 python inserter.py
 
-export TABLE_NAME=even_time_order_func_single
+export TABLE_NAME=event_time_order_func_single
 export BULK_SIZE=1000
 export DB_NAME=merge_tree
 export HAS_DATE_COLUMN=0
-export EVENTS_PER_DAY=1000000
+export EVENTS_PER_DAY=10
 python inserter.py
 
 export TABLE_NAME=event_date_batch

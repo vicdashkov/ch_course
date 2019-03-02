@@ -1,9 +1,10 @@
 Preparation:
 * put down all dockers
-* code editor scrips - code editor project files - slides
-* tabix
+* code editor becnh scrips - slides - code editor project files - browser
 * start ch in backgroud
+* delete data folder
 * setup inserter config
+* venv in created for inserter
 
 Hello everyone,
 In this lesson we'll talk about merge-tree family of CH engines
@@ -15,8 +16,8 @@ and data replication is possible only with engines from this family
 There are other engines as well, and we'll talk about them in due time, but chances are
 you'll start with some kind of merge tree table and stick to it for a long time
 
-Let's connect to our newly configured ch instance
-and try to create a table and a database
+I'm already connected to our newly configured ch instance with lovely tabix
+Now try to create a table and a database
 
 I was tempted to create a table like so at first. cool kinds don't read the docs, ha
 But yeah this will fail
@@ -25,11 +26,12 @@ and the reason why it fails is that we need to let CH know about
 some of the configs for this table
 These configs will be the main focus of this lecture
 
-If we look at file called experiments_tables.sql
-that you'll find in course files, you'll notice that there are of course different
+If we look at file second tab,
+code for which you'll find in course files, you'll notice that there are of course different
 ways to setup partitionain and order by for our tables
 
 What is event worse, in older days docs would say
+    -- read from the screen
     A MergeTree table must have a separate column containing the date. Here,
     it is the EventDate column. The date column must have the 'Date' type (not 'DateTime').
 So what do we do?
@@ -40,25 +42,6 @@ It's about time I intorduce you to 2 small scripts to kind of dirty
 benchmark our tables. You can find a link to gitgub in the lecture references
 
 ok. I'll run the test and we'll come back to results once it's done
-
-┌─table───────────────────────┬─size──────┬──────rows─┬─days─┬─avgDaySize─┐
-│ event_time_batch            │ 3.67 GiB  │ 365000000 │    0 │ inf YiB    │
-│ event_time_single           │ 3.67 GiB  │ 365000000 │    0 │ inf YiB    │
-│ even_time_order_func_batch  │ 4.91 GiB  │ 365000000 │    0 │ inf YiB    │
-│ even_time_order_func_single │ 4.90 GiB  │ 365000000 │    0 │ inf YiB    │
-│ event_date_batch            │ 4.66 GiB  │ 365000000 │  364 │ 13.11 MiB  │
-│ event_date_single           │ 4.66 GiB  │ 365000000 │  364 │ 13.11 MiB  │
-└─────────────────────────────┴───────────┴───────────┴──────┴────────────┘
-
-event_time_batch - took: 3622.57 - bulk size: 100000 - events per day: 1000000 - workers: 10
-event_time_single - took: 4441.38 - bulk size: 1000 - events per day: 1000000 - workers: 10
-even_time_order_func_batch - took: 3582.08 - bulk size: 100000 - events per day: 1000000 - workers: 10
-even_time_order_func_single - took: 4291.91 - bulk size: 1000 - events per day: 1000000 - workers: 10
-event_date_batch - took: 3760.28 - bulk size: 100000 - events per day: 1000000 - workers: 10
-event_date_single - took: 4566.77 - bulk size: 1000 - events per day: 1000000 - workers: 10
-
-
-and results are TODO
 
 SUMMARY: seems don't have to use separate date anymore
 better yet to use toYYYYMM() function to make partition even sparser
