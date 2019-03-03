@@ -1,0 +1,23 @@
+Preparation:
+* put down all dockers
+* code editor becnh scrips - slides - code editor project files - browser
+* start ch in backgroud
+* delete data folder
+* setup inserter config
+* venv in created for inserter
+
+
+
+
+
+
+It's about time I intorduce you to 2 small scripts to kind of dirty
+benchmark our tables. You can find a link to gitgub in the lecture references
+
+ok. I'll run the test and we'll come back to results once it's done
+
+SUMMARY: seems don't have to use separate date anymore
+better yet to use toYYYYMM() function to make partition even sparser
+and please don't use single inserts
+actually i've seen very weird behaviour from ch with many single inserts. you can kill
+you server easy

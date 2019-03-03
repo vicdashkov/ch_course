@@ -1,6 +1,10 @@
 TODO: need more details and better script for the video
 
 CH has this awesome feature that allows to enable sampling
+Why do we need it? Check out the slides!)
+If the data is to large to fit in ram
+CH will perform your query on a small subset of
+
 
 ok. lets start by creating regular table
 

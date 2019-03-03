@@ -1,10 +1,12 @@
 Preparation:
 * put down all dockers
-* code editor becnh scrips - slides - code editor project files - browser
+* code editor becnh scrips
+* slides in desktop
+* browser with tabix
+* browser with ch docs merge tree
+* browser with bug in git
 * start ch in backgroud
 * delete data folder
-* setup inserter config
-* venv in created for inserter
 
 Hello everyone,
 In this lesson we'll talk about merge-tree family of CH engines
@@ -16,35 +18,56 @@ and data replication is possible only with engines from this family
 There are other engines as well, and we'll talk about them in due time, but chances are
 you'll start with some kind of merge tree table and stick to it for a long time
 
-I'm already connected to our newly configured ch instance with lovely tabix
-Now try to create a table and a database
+So what is so special about these engines?
+When you insert bunch and bunch of data in CH,
+Merge tree will put all the parts wherever it can, and then merge the parts in background,
+In effect doesn't constatly rewrite the data. Which is very expensive
+so for us the whole process is dark magic.
+All we see is that data is being injected. Fast.
 
-I was tempted to create a table like so at first. cool kinds don't read the docs, ha
-But yeah this will fail
+-- switch to tabix
+
+I'm already connected to our newly configured ch instance with lovely tabix
+Now let's try to create a table and a database
+
+And yes, as the comment suggests we'll fail.
+Why? because cool kinds don't read the docs, ha
 
 and the reason why it fails is that we need to let CH know about
 some of the configs for this table
+
+-- show docs merge tree
+
 These configs will be the main focus of this lecture
 
-If we look at file second tab,
-code for which you'll find in course files, you'll notice that there are of course different
+If we look at the second tab,
+(all the code you'll find in course files)
+you'll notice that there are of course different
 ways to setup partitionain and order by for our tables
 
-What is event worse, in older days docs would say
-    -- read from the screen
-    A MergeTree table must have a separate column containing the date. Here,
-    it is the EventDate column. The date column must have the 'Date' type (not 'DateTime').
+we can partition by time expression which would yield a name like this
+
+-- type 201901
+
+You can refer to this partition with such a name to say delete or detach it at a later time by the way
+
+we can also specify an expression in order by clause
+
+What is event worse, is that in older days docs would say
+
+-- show the bug report
+
+that we have to have a separete column for date and for time.
+
 So what do we do?
 
-We will benchmark different setups and then try to make sense of it
+Well in the next lesson we will benchmark different setups and then try to make sense of it
 
-It's about time I intorduce you to 2 small scripts to kind of dirty
-benchmark our tables. You can find a link to gitgub in the lecture references
+-- change to slides with summary
 
-ok. I'll run the test and we'll come back to results once it's done
+As of now we'll wrap. I'll just summarize by saying that for such a powerful
+table we have to specify surprisingly small amount of details at a creation time.
+And CH will take care of the rest.
 
-SUMMARY: seems don't have to use separate date anymore
-better yet to use toYYYYMM() function to make partition even sparser
-and please don't use single inserts
-actually i've seen very weird behaviour from ch with many single inserts. you can kill
-you server easy
+Join in me on a journey to determine the coolest setup for merge tree in the next video.
+See you next lesson
