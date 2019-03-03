@@ -1,6 +1,15 @@
-Hi. My name is Viktor and I struggle with big data.
+Hi. My name is Viktor
+
+-- slide change
+
+and I struggle with big data.
+
+-- slide change
 
 So many of us have to suffer from caffeine addiction only because we have to wait for hours for our quires to run.
+
+-- slide cahnge
+
 We have no choise but to constatly make and consume more and more coffee while waiting for yet another big data
 solution to fail on us with out of memory exception.
 
@@ -12,10 +21,12 @@ We've also, just like you, had play with ever growing cron jobs to precalculate 
 
 Well, fear no more. I've got a cure for you.
 
+-- slide change
+
 Clickhouse is a tool that answers any question on a datasests comprised of many terabites of data within seconds
 
 As a data scientist, you need to have a good grasp of your data.
-As a decision maker, you need to make sure your business metrics show you current state of affairs, not old historical
+As an it decision maker, you need to make sure your system metrics show you current state of affairs, not old historical
 gurbage
 
 Then you've come to a right place
