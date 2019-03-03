@@ -1,18 +1,22 @@
 preparation:
 * remove all dockers
-* presentation in separe desckotop (right)
-* vs code in separate descktop (left)
+* presentation in separe desckotop
+* vs code basic_setup in separate desktop
 * browser with docker hub
 * remove propocessed
 * delete data folder
 * open tabix.io
 * docker rm
+* vs code close file section
+* sign out tabix.io
 
-Hi everyone to our next lesson
+Hi everyone and welcome to our next lesson
 
 Ok, so first we begin by creating POC,
-that is we're not sure about the technology and wee need to play with it first,
+that is we're not sure about the technology yet, and wee need to play with it first,
 see what it is and what we can do with it.
+
+-- slide change
 
 I always wanted to create Pokemon business
 And With Ch My dreams come true, finally.
@@ -22,23 +26,14 @@ I doubt there’s a better tool than CH.
 
 Yeah main theme of this course will be pokemons. why not. mind you I'm not a fun
 and have never seen as single episode of this animated series, so there will be
-factual errors about the piece. sorry in advance.
+factual mistakes about the piece. sorry in advance.
 
 Ok, so for the POC the easiest tool to start is Docker. We go to
 https://hub.docker.com/r/yandex/clickhouse-server/
 and there’s fairly standard stuff.
-They give us commands to start a serve and to connect a client to it
-Let’s take a closer look at commands they provide
-
-server:
--d -> start as deamon
---name -> give our container a name
---ulimit nofile -> number of open files
-
-client:
--it -> run our container as a console
---rm -> clenup the system after exit
---link -> link of course is to connect to another container. server in our case
+They give us a command to start a server
+and a command to connct to it with a client.
+How very thougfull
 
 Ok, I run a first one. Eveerything seems to be fine so far. 
 Second one worked as well. We are connected. Lets take a look at what we have here 
@@ -49,40 +44,48 @@ SHOW DATABASES
 │ system  │ 
 └─────────┘ 
 
+show tables from system
+show tables from default
+
 I select tables from these DBs. Default is empty and 
-system has 23 rows in set
+system has 32 rows in set
 Ok. We’ll take a look at some of these guys at a later time.
 As of now lets come back to docker.
+
 when I ran docker ps I see that ports are not open.
 I also strongly suspect that persistence is not set. dah
 
 to remedy all this problems and to simplify development lets create docker compose.
 Which will look like this
 
-talk about docker-compose
-talk about ch_configs
+show project structure
 
-stop all containers
+For ch server I'm setting persistance with external volume
+I'm also attaching configs folder to proper dir from which
+ch would expect to read the configs
 
-Let's also structure our config folder properly.
-So I created some basic setup for us
-it will greatly simplify our lives later on
+For client I'm simply attaching client-config.xml to
+proper location in client docker image
 
-What I've done here is broken down our one big congif.xml
-into a bit more managable chunks
-users configs is now a separate file, and we'll be able to add more configs
-as separate .xml files. should make it a bit easier to manage
-currently, in our users.xml, I create user by the name vic with some simple password
-you can add as many users to this config as you want, without the need
-to restart the server.
+inside our ch_congigs dir, I've got 3 files
+first one is docker-related configs, we open up the ports here
+Then we've got standard umodified config.xml.
+You'll find a link to the file inside ch repo in lecture notes
+And the last file is users.xml. In this file we can mange ch users. Setup permissions passwords etc.
 
-in docker compose we've got all the same thing as in that docker run command,
-but we've also added volumes. restart policy and we've opend ports.
-of course we've specified tag for docker images
-
-as you can see I also attach client config to our client image,
+And the last file I have to mention is client configs.xml. This file is in project root. And here
+we're specifyng credentials for our users
 so we don't have to type password all the time. This will also spare our admins'
-health a bit couse they won't have to see plain password in logs:)
+wellbeing a bit couse they won't have to see plain password in logs:)
+
+What we've done here is broken down our one big congif.xml
+into a bit more managable chunks. Should we need to modify configs,
+We can just add an extra file to the dir, and ch will created preprocessed file for us
+based on the rules we specify in metatags. But we'll come back to it later
+
+-- stop all containers
+-- start docker compose
+docker-compose up -d ch
 
 and we should be able to connect to db like so with password
 docker-compose run --rm client --host ch user vic password 12345
@@ -92,9 +95,14 @@ docker-compose run --rm client --host ch
 and our client config should kick in
 
 there another client you can use. it's called tabix.io
-and if we had to the website, we'll be able to use web app to connect to our
-docker installation, I think this is a good but a bit raw tool.
-you can give a try, but in this course we'll be mostly using cli
 
-We'll wrap this lesson here
+-- go to ui.tabix.io
+
+and if we head to the website, we'll be able to use web app to connect to our
+docker installation
+
+Ok, so we've got our playgroud ch up and running, and we're able to connect to it with the 2 amazing clients
+Good start
+
+We'll wrap here for now
 Thank you so much and see you next lesson
