@@ -5,22 +5,34 @@ Why?
 
 Well it super fast ans scalable.
 some cool numbers from Yandex as of 2017
+
+-- slide change
+
 25 trillions of rows
 500 servers
 total throughput of query processing is up to two terabytes per second
 
 One of the reason is underlying techonlogy: CODB
 
+-- slide change
+
 What is CODB and why do I want it?
 A column-oriented database stores each column continuously. each column will be stored
 in sequential blocks.
 What does it give us? it gives us data locality for starters
 
-Which we can visualise like this. This image is courtosy of Yandex.
+Which we can visualise like this.
+
+-- slide change
+
+This image was borrowed khm, from Yandex's docs.
 Data locality has great benefits when we store on hard drives,
 Hard drives provide optimal performace for sequential access
 
 Also, CH and CODB are designed to make use of Memory Alignemnt
+
+-- slide change
+
 I've included great article from towardsdatascience for deeper yet digestible dive
 into this technique. As an example, with the help of memory alignment we can store
 S2 in only 24 bytes instead of 40 bytes for S1. It has to do with bits padding where we
@@ -28,25 +40,38 @@ loose 7 bytes for every boolean value.
 
 Exciting stuff
 
-And again Yandex provides some nice gifs to illustrate the points above
+-- slide change
+
+And again Yandex provides some nice gifs to illustrate optimal usage of resources possible with CODB
+
 In typical row oriented DB we need to process large ammount of unneded data
+
+-- slide change
 
 In CODB we get only the data we need, less memory and, if we get it right, less CPU
 
 So underlying technology is good then. How about implementation?
+
+-- slide change
 
 Well CH has good and bad parts about it, of course
 
 To summarise the slide. You can put and process stuff in if FAST.
 Need more power get more nodes.
 
-CH bad parts: this is not transactional DB. Consistency is not guarantted.
-Joins are not great, but there are worarouns)
-When it comes to deletion We've tried to delete 60G on staging.
-Didn' go very well you can do it, but test it with your data and your setup first.
-But CH is not designed for deletion, so maybe just stay away.
+-- slide change
 
-If you think this technology covers your use cases, please hope it for a journey.
+CH bad parts: this is not transactional DB. Consistency is not guarantted.
+Joins are not great, but there are workarouns)
+When it comes to deletion We've tried to delete 60G on a test ch.
+Didn' go very well.
+you can do it, but test it with your data and your setup first.
+Remember CH is not designed for deletion, so maybe just stay away.
+
+If you think this technology covers your requirements, please hope it for a journey.
+
+-- slide change
+
 See you next lesson.
 
 TODO: POSSIBLY LINK: Scales very well vertically
