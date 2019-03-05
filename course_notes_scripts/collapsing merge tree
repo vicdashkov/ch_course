@@ -1,10 +1,19 @@
+Preparation:
+* start ch
+* slides
+* browser with tabix
+* browser with merge tree docs
+* vs code lesson files
+* connect to ch in vs code
+
 Hi everyone.
 Today we'll talk about collapsing merge tree
 This is an interesting engine. At my place we used it because at some point CH didn't support updates
-And for one of our tables it sort of made sense.
-We still use it, but we would've done it without it now.
+And for one of our tables it made sense.
+We still use it, but we would've done it without it with a regular merge tree,
+Since we don't really change data that often.
 
-Still I think It's important to talk about it, since there are use cases for it that
+Still I think It's important to talk about it. There are use cases for it that
 you might encounter.
 
 Let's start by creating a table
@@ -13,7 +22,9 @@ Let's start by creating a table
 
 I strongly suggest using default value for sign, if you insert
 any other value instead of -1 or 1, you will see pretty ugly error in logs
-and CH won't be able to ever collapse the table
+and CH won't be able to collapse the table ever
+
+-- browser with docs
 
 Let's now try to inset. Clickhouse docs sugget this way.
 You need to cancel and remember previous state. Ok lets see what happens
@@ -22,20 +33,33 @@ You need to cancel and remember previous state. Ok lets see what happens
 
 lets test our table
 and there are 2 ways
+one streight from docs,
+and the othe one streight from the other section of the docs
 
 -- tabix
 
-But now you can also insert values like this and as far as I can tell it will still work
+But what we've been doing is a bit simpler.
+We don't remember any states, we just insert new values with the same primary key and
+1 as a sign
+CH warns against it, they say the table will never be collapsed, but it just work for us.
 
--- tabix
+And to demonstrate that it indeed works lets test it
 
-and if you execute
--- tabix
+-- VS code with tab on lesson code. terminal is client
 
-ok so ch documentation has pretty good overview and explanation of this topic
-There's also additional link attached with some more discussion on the topic
+-- insert and select one by one
+
+We just saw collapsing and it was good. Never gave us any problems, but be aware.
+Docs say don't do it.
+
+-- to slides
 
 So why use it?
 If you have some entity that changes all the time, but you don't have time to wait for data writes.
 Merge tree will make sure data is changed, but perform expensive i/o operation only a few times
-to save you on server cost.
+to save you on server costs and qury timings.
+
+Drawbacks? using of Final and fancy select statement with canelling out is more expensive
+that regular selects.
+
+Ok, hope you enjoyed and see you next lesson
