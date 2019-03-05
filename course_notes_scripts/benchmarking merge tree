@@ -1,23 +1,112 @@
 Preparation:
-* put down all dockers
-* code editor becnh scrips - slides - code editor project files - browser
-* start ch in backgroud
+* start ch
+* code editor becnh scrips
+* script to run bench with small events
+* slides desktop
 * delete data folder
-* setup inserter config
-* venv in created for inserter
+* venv in created and activated for inserter
+* browser with tabix
 
-
-
-
-
+Hi everyone.
+So in the previous lesson we got to know merge tree a little,
+but we've actually gotten more questions then answers.
+Like what do we do with all the order by and partition by clauses
 
 It's about time I intorduce you to 2 small scripts to kind of dirty
 benchmark our tables. You can find a link to gitgub in the lecture references
 
-ok. I'll run the test and we'll come back to results once it's done
+-- change to VS code with inserter script
 
-SUMMARY: seems don't have to use separate date anymore
-better yet to use toYYYYMM() function to make partition even sparser
-and please don't use single inserts
-actually i've seen very weird behaviour from ch with many single inserts. you can kill
-you server easy
+This is not python course, so I'll just breifly go over the code.
+
+-- open inserter.py
+
+In inserter.py we've got our, well, inserter. This inserter simulates parallel insertion of specified number
+of workers
+This way we sort of try to emulate production environment when you've got a pipeline with multiple,
+perhaps, microservices.
+
+-- open selecter configs
+
+So yeah. This will just to our CH with configurable params like number of workers,
+batch, size and so on.
+
+-- open selecter.py
+
+In selecter.py we've got our, well, selecter. Selecter will execute specified query specified number of times.
+
+-- open selecter configs
+
+Can you specify something else? not it selecter no.
+
+To run our guys, I've created 2 simple bash scripts where we actully set all the configs.
+For demonstartion purposes, values here are very small. For inserter we'll just do 10 events per day.
+
+Later on we'll talk about larger numbers, when we'll try to compare different table configurations
+
+Ok, to run the script let's create tables.
+
+-- switch to tabix
+
+I've got 6.
+
+3 pairs of different configs. we use each pair to compare small batch vs large batch
+
+For combination 1 we've got a time column, and we specify toYYYYMM expression for partition
+Order by is simple time, id tuple
+
+I think this is good time to mention that by default columns from order by will be used for primary key
+
+For combination 2 we've got toYYYYMM expression for partition by and for order by
+
+For combination 3 we'll create separate column to be used in partition by and order by columns
+
+Let's create all our tables
+
+and run the tests and we'll come back to results once it's done
+
+-- fast forward
+
+Welcome back. Our insertion is complete. We can get some idea about the sizes of our tables with this command
+
+-- switch to tabix tab 2
+
+Considering we've also got logs with timings
+
+-- show insert log
+
+and select
+
+-- show select log
+
+we can now paint slightly better picture about our schemas
+
+-- come back to slides with tables
+
+Our batch size of 1000 perfoms poorly at insertion.
+This is predictable. The timings are not as drammatic as I expected and could be attributed to network
+But We can clearly see that big batches work good. So that's good.
+
+Insertion into event_time_order_func took surpisingly little.
+I was also amazed by the fact that inserting into event_date with separate date column was slower
+than inserting into event_time with time expression.
+
+When it comes to selects, event_date with group by on time column is surprasignly a big looser.
+second comes event_time_order_func with expression in order by clause. This was very interesting to me.
+I'm not sure why it has to be so slow.
+
+And the most surprising number to me were the table sizes
+event_time_order_func takes the most space. I guess CH was not able to inline PK properly with such sparse ID
+
+Many Good numbers here. Please play with it by yourself with your schemas and test your assumtions. I didn't
+expect to see any surprises in this benchmark, and yet here we are.
+
+SUMMARY: it seems don't have to use separate date column anymore
+we can use toYYYYMM() or similar expression in partition by claouse,
+as for order by and primary key, you really need to benchmark your schemas.
+
+But remember to not use single inserts.
+I've seen very weird behaviour from ch with many single inserts. you can kill
+you server easy. Rool of thum that I read somewhere - don't insert more that twice per second.
+
+Hope you like this video, and see you next lesson
