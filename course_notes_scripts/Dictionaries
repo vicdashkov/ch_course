@@ -1,203 +1,99 @@
+Preparation:
+* rm data dir
+* rm preprocessed configs
+* slides
+* vs code lesson files
+* tabix
 
--- Function of dict could be two fold: holding results of heavy jobs, and fast lookup at the same time
+Hello everyone
 
--- CH recommends to use flat, hashed and complex_key_hashed. which provide optimal processing speed.
+Today we'll talk about dictionaries
+Dictionaries in Ch allows us to store, well, dictionaries in ram.
 
--- Flat
--- The dictionary key has the UInt64 type and the value is limited to 500,000.
--- If a larger key is discovered when creating the dictionary,
--- ClickHouse throws an exception and does not create the dictionary.
+We can connect CH dictionaries to external sources like databases and csv files
 
--- I would suggest using lifetime range for dict updates
+Connecting to external DB has obvious benefit of having access to recent data from external source
+And csv files could be very useful if you have some heavy jobs running in other parts of your system
+You can than mount some kind of network drive on your CH node, and access the result of this job streignt from CH
+Very powerful.
 
--- For a text file, it checks the time of modification.
--- If the time differs from the previously recorded time, the dictionary is updated.
+We event went as war as using result of dictionary lookups as default values.
+A bit dirty, but works like magic
 
--- (regarding pet name column) "...do pokemons have pets? maybe. if they do let's record"
+-- change slide to dict layouts
 
--- Let's add dictionary directory to our docker-compose, so it looks like:
-version: '3'
+Clickhouse has 7 different layouts at our disposal
+But docs reccomend using flat, hashed and complex_key_hashed layouts
+These layouts provide optimal processing speed.
 
-services:
+In this video, we'll talk about flat dictionary
+The dictionary key has the UInt64 type and the value is limited to 500,000.
+Ch will not create flat dictionary if more keys are discovered
 
-  zookeeper:
-    image: zookeeper
-    volumes:
-      - './data_zoo/data:/data'
-      - './data_zoo/datalog:/datalog'
+Ok, to the action now
 
-  ch1:
-    image: yandex/clickhouse-server:18.16.1
-    restart: on-failure
-    depends_on:
-      - zookeeper
-    volumes:
-      - './data_ch1/ch:/var/lib/clickhouse/'
-      - './ch_configs:/etc/clickhouse-server/'
-      - './dictionaries:/opt/dictionaries/'
-    ports:
-      - 9000:9000
-      - 8123:8123
-      - 9440:9440
-      - 8443:8443
-    ulimits:
-      nofile: 262144
+-- open course files
 
-  ch2:
-    image: yandex/clickhouse-server:18.16.1
-    restart: on-failure
-    depends_on:
-      - zookeeper
-    volumes:
-      - './data_ch2/ch:/var/lib/clickhouse/'
-      - './ch_configs:/etc/clickhouse-server/'
-      - './dictionaries:/opt/dictionaries/'
-    ulimits:
-      nofile: 262144
+This is our good old docker ch.
+But this time I've added pokemon_dictionary.xml
+and pokemon.csv
+this is pretty much all you need to do to start using dict in CH
 
-  ch3:
-    image: yandex/clickhouse-server:18.16.1
-    restart: on-failure
-    depends_on:
-      - zookeeper
-    volumes:
-      - './data_ch3/ch:/var/lib/clickhouse/'
-      - './ch_configs:/etc/clickhouse-server/'
-      - './dictionaries:/opt/dictionaries/'
-    ulimits:
-      nofile: 262144
+important fileds in pokemon_dictionary.xml are
+dictionary name
+lifetime (ch will update our dict at random within specified range)
+layout (flat in our case, with limited number of keys)
+and structure.
+Structure has to represent your csv file.
+In our case i've got pokemon id field and mandatory id tag,
+as well as pokemon name and pokemon pet name (do pokemons themselfs have pets? not sure)
+there's more tinkering you can do, but this will do for now
 
-  ch4:
-    image: yandex/clickhouse-server:18.16.1
-    restart: on-failure
-    depends_on:
-      - zookeeper
-    volumes:
-      - './data_ch4/ch:/var/lib/clickhouse/'
-      - './ch_configs:/etc/clickhouse-server/'
-      - './dictionaries:/opt/dictionaries/'
-    ulimits:
-      nofile: 262144
+and let's take a quick look at pokemon.csv. where we see 3 columns we've described before
+Please note we've got some empty fields for zalechu and bixby
 
-  client:
-    image: yandex/clickhouse-client:18.16.1
-    volumes:
-      - './client-config.xml:/etc/clickhouse-client/config.xml'
+ok, let's move to the action. boot up our ch
 
--- Let's add our dict definition to ch configs folder. Our pokemon_dictionary.xml looks like this:
-<yandex>
-    <dictionary>
+-- run docker-compose up ch
 
-        <name>pokemon_dict</name>
+all seems fine now. lets dbl check ch sees our dict
 
-        <source>
-            <file>
-                <path>/opt/dictionaries/pokemon.csv</path>
-                <format>CSV</format>
-            </file>
-        </source>
+-- switch to tabix
 
-        <lifetime>
-            <min>300</min>
-            <max>360</max>
-        </lifetime>
+SELECT * FROM system.dictionaries
 
-        <layout>
-            <flat/>
-        </layout>
+and here we see some basic info about our dict
 
-        <structure>
-            <id>
-                <name>id</name>
-            </id>
-            <attribute>
-                <name>Name</name>
-                <type>String</type>
-                <null_value>Solo</null_value>
-            </attribute>
-            <attribute>
-                <name>PetName</name>
-                <type>String</type>
-                <null_value>Rex</null_value>
-            </attribute>
-        </structure>
+lets quick create a table for, say, event, as usual
+Structure should be fairly familiar to you by now
 
-    </dictionary>
+And insert some stuff as well
 
-</yandex>
+let's now try to get something out of our dict
 
--- when we execute
-SELECT * FROM system.dictionaries format Vertical
--- we see
-Row 1:
-──────
-name:            pokemon_dict
-origin:          /etc/clickhouse-server/pokemon_dictionary.xml
-type:            Flat
-key:             UInt64
-attribute.names: ['name','pet_name']
-attribute.types: ['String','String']
-bytes_allocated: 2105648
-query_count:     0
-hit_rate:        1
-element_count:   4
-load_factor:     0.00006103608758678569
-creation_time:   2018-12-29 16:35:20
-source:          File: /opt/dictionaries/pokemon.csv CSV
-last_exception:
+-- switch to tabix tab 3
 
--- let's now try to get something out of our dict
-SELECT
-    id AS event_id,
-    dictGetString('pokemon_dict', 'name', toUInt64(pokemon_id)) AS name,
-    dictGetString('pokemon_dict', 'pet_name', toUInt64(pokemon_id)) AS pet_name
-FROM pokemon.event_2_distributed
+executing select, and here we can see default values for pokemons
+with ids not in our dict.
 
-┌─event_id─┬─name────┬─pet_name─┐
-│     1777 │ zalechu │          │
-│  4444444 │ bixby   │          │
-└──────────┴─────────┴──────────┘
-┌─event_id─┬─name────┬─pet_name─┐
-│      122 │ pikachu │ Peanut   │
-│ 22222222 │ malibu  │ Princess │
-└──────────┴─────────┴──────────┘
+Don't like the casing? no problem
 
--- and to make it even more fun, let's create dict engine on ch2
--- interesting note: I couldn't create dictionary name with hyphen like pokemon-dict todo: pr?
-CREATE TABLE pokemon.pokemon_names
-(
-    id UInt64,
-    name String,
-    pet_name String
-)
-ENGINE = Dictionary(pokemon_dict)
+-- rename Name -> name; PetName -> pet_name
+-- swithc tabix 4; reload
+-- rename fields in query
 
-let's try to do join, and we'll benchmark this as well:
-SELECT
-    id AS event_id,
-    name,
-    pet_name
-FROM
-(
-    SELECT
-        id,
-        toUInt64(pokemon_id) AS pokemon_id
-    FROM event_2_distributed
-)
-ANY LEFT JOIN
-(
-    SELECT
-        id AS pokemon_id,
-        name,
-        pet_name
-    FROM pokemon_names
-) USING (pokemon_id)
+Yep, we can hot reload even structure for our dictionaries
 
-┌─event_id─┬─name────┬─pet_name─┐
-│     1777 │ zalechu │          │
-│  4444444 │ bixby   │          │
-└──────────┴─────────┴──────────┘
-┌─event_id─┬─name────┬─pet_name─┐
-│      122 │ pikachu │ Peanut   │
-│ 22222222 │ malibu  │ Princess │
-└──────────┴─────────┴──────────┘
+bonus point, lets create dict engine!
+
+-- tabix tab 5
+
+and we can do a join here or a simple select. could be also pretty convenient
+dictionary engine was added just recently, so that's nice
+
+Anyway.
+
+-- swithc to slides with summary
+
+I hope you enjoyed this video as much as I did,
+See you next lesson!
