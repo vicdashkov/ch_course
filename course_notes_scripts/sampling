@@ -35,7 +35,7 @@ ok sort of makes sense. let's benchmark a bit
 
 -- switch to tab 3
 
-lets create benchmarking tables
+lets create 2 separate benchmarking tables
 
 and lets run our inserter and selecter,
 We've seen them in action, so we know what to expecte, I'll just note that
@@ -44,9 +44,9 @@ I've changed configs accordingly with new dbs and table names
 -- switch to users.xml
 
 Before we do though, please note that I enabled query log for my user,
-It will enable us to compare memory usage for queries
+It will help us to compare memory usage for our queries
 
-with command like
+with command like this
 
 -- switch to tabix tab 4
 
