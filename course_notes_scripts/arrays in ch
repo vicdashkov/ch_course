@@ -1,111 +1,70 @@
-TODO: try running this course; feels short
-create database arrays
+Preparation:
+* rm data dir
+* rm preprocessed configs
+* slides
+* start docker
 
-CREATE TABLE arrays.event
-(
-  id UInt64,
-  time DateTime,
-  type UInt16,
-  pokemon_ids Array(UInt16)
-)
-ENGINE = MergeTree()
-PARTITION BY toYYYYMM(time)
-ORDER BY (toYYYYMM(time), id);
 
-INSERT INTO arrays.event
-insert into event values(1, '2018-01-01 00:00:00', 1, [2222, 222, 777, 51228]);
-insert into event values(2, '2018-01-01 00:00:00', 1, [2222, 222]);
-insert into event values(3, '2018-01-01 00:00:00', 1, [2222]);
+Welcome back everyone
+Today we'll talk about arrays.
 
-SELECT *
-FROM event
-┌─id─┬────────────────time─┬─type─┬─pokemon_id─┐
-│  3 │ 2018-01-01 00:00:00 │    1 │ [2222]     │
-└────┴─────────────────────┴──────┴────────────┘
-┌─id─┬────────────────time─┬─type─┬─pokemon_id─┐
-│  2 │ 2018-01-01 00:00:00 │    1 │ [2222,222] │
-└────┴─────────────────────┴──────┴────────────┘
-┌─id─┬────────────────time─┬─type─┬─pokemon_id───────────┐
-│  1 │ 2018-01-01 00:00:00 │    1 │ [2222,222,777,51228] │
-└────┴─────────────────────┴──────┴──────────────────────┘
+One of the main reason for using arrays is the fact that we're not suppose to use joins in CH
+We're suppose to store our data in very wide tables,
+and arrays allow us to have one to many relationships with such an arrangement
+
+Let's just streight to the business to get a better grasp of what I'm talking about
+
+-- switch to tabix tab 1
+
+so here we're of couse creating simple table with a filed of type Array(UInt16)
+
+When we select we see nothing that would surprise us
+
+Now let's move to juicy part.
 
 We'll start simple with arrayMap
-SELECT
-    id,
-    arrayMap(pokemon_id -> dictGetString('pokemon_dict', 'name', toUInt64(pokemon_id)), pokemon_id) AS names
-FROM event
-┌─id─┬─names───────┐
-│  3 │ ['pikachu'] │
-└────┴─────────────┘
-┌─id─┬─names────────────────┐
-│  2 │ ['pikachu','malibu'] │
-└────┴──────────────────────┘
-┌─id─┬─names──────────────────────────────────┐
-│  1 │ ['pikachu','malibu','zalechu','bixby'] │
-└────┴────────────────────────────────────────┘
 
-straightforward enough
-Array join is a bit more interesting
+-- switch tabix tab
 
-SELECT
-    id event_id,
-    dictGetString('pokemon_dict', 'name', toUInt64(arrayJoin(pokemon_id))) name,
-    arrayJoin(pokemon_id) `pokemon id`
-from event
+so here we're just resolving our pokemon's id to names with the help of our
+good old dictionary.
+straightforward enough. but not exactly what we're used to in relational world
+Let's fix that
 
-this in essence should be able to model regular Relational db design
-Lets make it cleaner with ARRAY JOIN clause
+And Array join is to the help, but a coinsidence is a bit more interesting
 
-SELECT
-    id event_id,
-    dictGetString('pokemon_dict', 'name', toUInt64(pokemon_id)) name,
-    pokemon_id `pokemon id`
-from event
-ARRAY JOIN pokemon_id
+-- swith to tab, execute
 
-More weirdness with arrayEnumerate which pretty much does
-SELECT
-    id AS event_id,
-    dictGetString('pokemon_dict', 'name', toUInt64(pokemon_id)) AS name,
-    pokemon_id AS `pokemon id`,
-    enum
-FROM event
-ARRAY JOIN
-    pokemon_id,
-    arrayEnumerate(pokemon_id) AS enum
-┌─event_id─┬─name────┬─pokemon id─┬─enum─┐
-│        3 │ pikachu │       2222 │    1 │
-└──────────┴─────────┴────────────┴──────┘
-┌─event_id─┬─name────┬─pokemon id─┬─enum─┐
-│        2 │ pikachu │       2222 │    1 │
-│        2 │ malibu  │        222 │    2 │
-└──────────┴─────────┴────────────┴──────┘
-┌─event_id─┬─name────┬─pokemon id─┬─enum─┐
-│        1 │ pikachu │       2222 │    1 │
-│        1 │ malibu  │        222 │    2 │
-│        1 │ zalechu │        777 │    3 │
-│        1 │ bixby   │      51228 │    4 │
-└──────────┴─────────┴────────────┴──────┘
+usually functions don't change a set of rows, just the values
+The 'arrayJoin' function takes each row and generates a set of rows esentialy unfolding our result set
+enought of CH docs talk. What is essentially happening here is with
+the clause in line 3, we're resolving names with array join
+but in lin 4 we're unfolding our arrays, and in essence we get denormalized table with
+mapping pokemon name to pokemon id
+I'd say arrayJoin is what helps us to model regular Relational db design
 
-TODO: not sure if want to include this into lesson
-CREATE TABLE arrays.event_t
-(
-  id UInt64,
-  time DateTime,
-  types Array(UInt16),
-  pokemon_ids Array(UInt16)
-)
-ENGINE = MergeTree()
-PARTITION BY toYYYYMM(time)
-ORDER BY (toYYYYMM(time), id);
+-- swith tabix next tub
 
-insert into event_t values(1, '2018-01-01 00:00:00', [1, 2], [2222, 222, 777, 51228]);
-insert into event_t values(2, '2018-01-01 00:00:00', [1, 3], [2222, 222]);
-insert into event_t values(3, '2018-01-01 00:00:00', [1], [2222]);
+we can also make it cleaner with ARRAY JOIN clause
+which would be more familiar to most of us
 
-SELECT
-    id event_id,
-    arrayJoin(types),
-    dictGetString('pokemon_dict', 'name', toUInt64(arrayJoin(pokemon_ids))) name,
-    arrayJoin(pokemon_ids) `pokemon id`
-from event_t
+Here we at least see Regular (air quotes) join
+
+More weirdness with arrayEnumerate which pretty much enumarates every row in a subset
+Could be useful. I think
+
+-- switch to summary
+
+Ok, so we've talked about arrays in clikchouse. Amazing feature that can help us
+model more complex data
+
+In particular, we've talked about arrayMap
+technicuqe that allows us to map a value to another value;
+And we've talked about arrayJoin. Pretty weird function that unfolds our
+arrays for us, so we can view our data plain denormalized table
+
+Array in ch allow us to model one to many relatioinships in the world of wide tables, so we
+can avoid using joins, which are notoriusly slow in solutions like CH
+
+Hope you enjoyed it as much as I did, and see you next video!
+

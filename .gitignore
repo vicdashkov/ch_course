@@ -112,8 +112,7 @@ ch_docker/data_ch3/*
 ch_docker/data_ch4/*
 ch_docker/data_zoo/*
 *.pptx
-config-preprocessed.xml
-users-preprocessed.xml
+*-preprocessed.xml
 *.crt
 *.pem
 *.key

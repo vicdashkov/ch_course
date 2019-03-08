@@ -105,4 +105,4 @@ Ok, so we've got our playgroud ch up and running, and we're able to connect to i
 Good start
 
 We'll wrap here for now
-Thank you so much and see you next lesson
+Thank you so much and see you next video
