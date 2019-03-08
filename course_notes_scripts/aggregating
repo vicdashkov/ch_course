@@ -1,3 +1,25 @@
+Preparation:
+* rm data dir
+* rm preprocessed configs
+* slides
+* start docker
+
+Welcome back everyone.
+Today we'll talk about extremely powerfull feature of ch
+
+I mean I've sad a lot about how fast CH is, but the truth is,
+not fast enough. I mean there's always ways to improve.
+And CH team knows it. so they implemented aggregates.
+Most of you know what aggregates are. I'll just quicly say that
+aggregates are pretty much precompute values
+Sometimes teams decide to precompute things with external job,
+and save results to storage, like another db or a table
+And it works. but this approach is not the best.
+It's hard to maintain the jobs, and results could be hard to use on custom queries
+
+CH allows us to
+
+
 CREATE DATABASE aggregating
 
 CREATE TABLE aggregating.event
@@ -115,18 +137,5 @@ SELECT sumMerge(types_sum) FROM aggregating.event_aggs
  attempt 1 took: 0.1241s
  attempt 2 took: 0.16787s
 
+todo: maybe use uniq. i think it's heavy
 TODO: bigger dataset; use other partition on work laptop
-
-TODO: maybe?
-SELECT sumForEach(x)
-FROM
-(
-    SELECT [1, 2] AS x
-    UNION ALL
-    SELECT [3, 4, 5]
-    UNION ALL
-    SELECT [6, 7]
-)
-┌─sumForEach(x)─┐
-│ [10,13,5]     │
-└───────────────┘

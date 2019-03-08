@@ -6,7 +6,7 @@ Preparation:
 * vs code lesson files
 * connect to ch in vs code
 
-Hi everyone.
+welcome back everyone.
 Today we'll talk about collapsing merge tree
 This is an interesting engine. At my place we used it because at some point CH didn't support updates
 And for one of our tables it made sense.

@@ -10,7 +10,7 @@ preparation:
 * vs code close file section
 * sign out tabix.io
 
-Hi everyone and welcome to our next lesson
+welcome back everyone and welcome to our next lesson
 
 Ok, so first we begin by creating POC,
 that is we're not sure about the technology yet, and wee need to play with it first,

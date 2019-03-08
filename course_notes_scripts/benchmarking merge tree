@@ -7,7 +7,7 @@ Preparation:
 * venv in created and activated for inserter
 * browser with tabix
 
-Hi everyone.
+welcome back everyone.
 So in the previous lesson we got to know merge tree a little,
 but we've actually gotten more questions then answers.
 Like what do we do with all the order by and partition by clauses
