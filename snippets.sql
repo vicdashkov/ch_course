@@ -10,7 +10,7 @@ SHOW PROCESSLIST
 
 SELECT *
 FROM system.functions
-WHERE lower(name) LIKE ‘%sort%'
+WHERE lower(name) LIKE '%sort%'
 
 SELECT sumForEach(x)
 FROM
