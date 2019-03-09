@@ -1,8 +1,16 @@
-TODO: time it with dry run
+Preparation:
+* rm data dir
+* rm preprocessed configs
+* slides
+* start docker
 
-Why do we need cluster?
-- scalability (sharding or segmentation) - comes with CH
-- reliability (replication) - Zookeeper
+Welcome back
+
+Quick question. Why do we need cluster?
+Easy. because we need scalability and reliability.
+
+scalability comes with CH out of the box in a form of sharding or segmentation
+reliability also comes with ch, but we need to add Zookeeper to the mix
 
 Experiment - 1 Node running; adding one node
 

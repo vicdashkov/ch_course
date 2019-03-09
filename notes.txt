@@ -6,8 +6,6 @@ presentation "internals" has benchmark results for adding more nodes to cluster
 
 TODO: BENCHMARD: dict in dict syntax and as engine https://clickhouse.yandex/docs/en/operations/table_engines/dictionary/
 
-?????transform????? https://clickhouse.yandex/docs/en/query_language/functions/other_functions/#transform
-
 Thing about ignore()
 
 -- for sure "with" clause

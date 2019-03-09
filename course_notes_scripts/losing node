@@ -88,7 +88,6 @@ ENGINE = ReplicatedMergeTree('/clickhouse/tables/2/losing_node_event', 'ch4')
 PARTITION BY toYYYYMM(time)
 ORDER BY (toYYYYMM(time), id);
 
-TODO: investigate why count still grows after inserter stops
 1) inserted 1 manually count 1
 2) inserted 365 count 365
 3) after restarting + 10 events. ok. maybe zookeeper count 375
