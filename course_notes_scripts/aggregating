@@ -57,5 +57,9 @@ Wait and now to the good parts. Performance! I've run our bencmarking suite and 
 
 -- switch to slides
 
+what is interesting, as I was playing with our benchmarking i noticed
+ingestion of data doesn't seem to take any longer
+when we have aggregates
+
 TODO: need to do section about comparison
 TODO: maybe query log on selector
