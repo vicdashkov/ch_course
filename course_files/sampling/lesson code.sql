@@ -28,7 +28,7 @@ SAMPLE 1/10
 
 
 -- tab 2
-CREATE TABLE sampling.pokemon_event -- pokemon here signifies that we got it right this time
+CREATE TABLE sampling.pokemon_event -- pokemon here signifies that we got sampling right this time. don't ask
 (
   id UInt64,
   time DateTime,
@@ -44,6 +44,9 @@ insert into sampling.pokemon_event(id)
 values (1), (2), (3), (4), (5), (6), (7), (8), (9), (10);
 
 SELECT count()
+FROM sampling.pokemon_event
+
+SELECT count() * 2 -- we need to offset here
 FROM sampling.pokemon_event
 SAMPLE 0.5
 
@@ -74,3 +77,24 @@ ORDER BY (time, intHash32(id));
 -- tab 4
 SELECT query, formatReadableSize(memory_usage)
 FROM system.query_log WHERE type = 2 AND event_date = today()
+
+
+
+--- todo: remove this is temp
+
+INSERT INTO sampling.pokemon_event values(1, '2018-01-02 00:00:00', 1, 1);
+INSERT INTO sampling.pokemon_event values(2, '2018-01-02 00:00:00', 2, 1);
+INSERT INTO sampling.pokemon_event values(3, '2018-01-02 00:00:00', 2, 1);
+INSERT INTO sampling.pokemon_event values(4, '2018-01-02 00:00:00', 3, 2);
+INSERT INTO sampling.pokemon_event values(5, '2018-01-02 00:00:00', 4, 3);
+INSERT INTO sampling.pokemon_event values(6, '2018-01-02 00:00:00', 4, 3);
+
+
+SELECT count(), sum(type), uniq(type), sumIf(type, pokemon_id % 2 = 0) FROM sampling.pokemon_event
+┌─count()─┬─sum(type)─┬─uniq(type)─┬─sumIf(type, equals(modulo(pokemon_id, 2), 0))─┐
+│       6 │        16 │          4 │                                             3 │
+└─────────┴───────────┴────────────┴───────────────────────────────────────────────┘
+
+
+SELECT count() * 10, sum(type) * 10, uniq(type), sumIf(type, pokemon_id % 2 = 0) FROM sampling.pokemon_event
+sample 0.5

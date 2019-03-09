@@ -61,5 +61,8 @@ what is interesting, as I was playing with our benchmarking i noticed
 ingestion of data doesn't seem to take any longer
 when we have aggregates
 
+when I executed select count I saw the nuber 96360
+so ch collapsed 365000000 records into only 96360
+
 TODO: need to do section about comparison
 TODO: maybe query log on selector

@@ -1,3 +1,4 @@
+-- TODO: remove this is temp
 
 SELECT
     count(),
@@ -9,9 +10,7 @@ FROM aggregating.event
 ┌───count()─┬─sum(type)─┬─uniq(type)─┬─sumIf(type, equals(modulo(pokemon_id, 2), 0))─┐
 │ 365000000 │ 547461083 │          4 │                                     298624265 │
 └───────────┴───────────┴────────────┴───────────────────────────────────────────────┘
-
 1 rows in set. Elapsed: 2.961 sec. Processed 365.00 million rows, 1.46 GB (123.27 million rows/s., 493.07 MB/s.)
-
 
 SELECT
     countMerge(count_events),
@@ -19,7 +18,6 @@ SELECT
     uniqMerge(unique_type),
     sumIfMerge(why_would_i_need_this)
 FROM aggregating.event_aggs
-
 ┌─countMerge(count_events)─┬─sumMerge(types_sum)─┬─uniqMerge(unique_type)─┬─sumIfMerge(why_would_i_need_this)─┐
 │                365000000 │           547461083 │                      4 │                         298624265 │
 └──────────────────────────┴─────────────────────┴────────────────────────┴───────────────────────────────────┘
@@ -46,6 +44,8 @@ SELECT countMerge(count_events), sumMerge(types_sum), uniqMerge(unique_type), su
  attempt 1 took: 0.01007s
  attempt 2 took: 0.00825s
 
+SELECT query, formatReadableSize(memory_usage)
+FROM system.query_log WHERE type = 2 AND event_date = today()
 
 query:                            SELECT countMerge(count_events), sumMerge(types_sum), uniqMerge(unique_type), sumIfMerge(why_would_i_need_this) FROM aggregating.event_aggs
 formatReadableSize(memory_usage): 26.47 MiB
