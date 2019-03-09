@@ -15,127 +15,46 @@ aggregates are pretty much precompute values
 Sometimes teams decide to precompute things with external job,
 and save results to storage, like another db or a table
 And it works. but this approach is not the best.
-It's hard to maintain the jobs, and results could be hard to use on custom queries
+It's hard to maintain the jobs, and results could be hard to use on ever changing queries
 
-CH allows us to
+CH allows us to do aggregates
+Again a bit of ch docs talk
+ClickHouse replaces all rows with the same primary key (or more accurately, with the same sorting key)
+with a single row that stores a combination of states of aggregate functions.
+But this all happens within data part. If data with same sorting(or primary) key
+goes to different data parts, data will not be merged
 
+ok, let's play a bit to make it a bit more visual
 
-CREATE DATABASE aggregating
+We would usually want to create materialized view with aggregates,
+So our data floes from our master table to aggregated table without us
+doing anything at all. Which is my prefered state of things
 
-CREATE TABLE aggregating.event
-(
-  id UInt64,
-  time DateTime,
-  type UInt16,
-  pokemon_id UInt16
-)
-ENGINE = MergeTree()
-PARTITION BY toYYYYMM(time)
-ORDER BY (toYYYYMM(time), id);
+-- change to tabx
 
-lets start simple.
-insert into event values(1, '2018-01-01 00:00:00', 1, 1);
-insert into event values(1, '2018-01-01 00:00:00', 2, 1);
-insert into event values(1, '2018-01-01 00:00:00', 2, 1);
+so here we create regular table of our beloved merge tree engine
+And just alongside it we put our MV
 
-now we can do
-SELECT sumIf(type, type = 2)
-FROM event
-┌─sumIf(type, equals(type, 2))─┐
-│                            4 │
-└──────────────────────────────┘
-or
-SELECT countIf(type = 2)
-FROM event
-┌─countIf(equals(type, 2))─┐
-│                        2 │
-└──────────────────────────┘
-simple enough
-Lets explore state
-SELECT countIfState(type = 2)
-FROM event
-┌─countIfState(equals(type, 2))─┐
-│                               │
-└───────────────────────────────┘
-Make sense, and now
-SELECT countIfMerge(x)
-FROM
-(
-    SELECT countIfState(type = 2) AS x
-    FROM event
-)
-┌─countIfMerge(x)─┐
-│               2 │
-└─────────────────┘
+please pay attention to sumState and uniqState functions that
+we specify in our select clause.
+so what we achive here is precompute values for sum of type of events
+and uniq number of pokemon id
+grouped by id and time.
 
-In production we want to create something like this
-CREATE MATERIALIZED VIEW aggregating.event_aggs
-ENGINE = AggregatingMergeTree()
-PARTITION BY toYYYYMM(time)
-ORDER BY (toYYYYMM(time), id)
-AS SELECT
-    id,
-    time,
-    sumState(type)    AS types_sum,
-    uniqState(pokemon_id) AS unique_id
-FROM aggregating.event
-GROUP BY id, time;
+-- change tabix
+ok lets see how to use it now.
 
-quickly check
-insert into event values(2, '2018-01-02 00:00:00', 1, 1);
-insert into event values(2, '2018-01-02 00:00:00', 2, 1);
-insert into event values(2, '2018-01-02 00:00:00', 2, 1);
+inserting some values in
 
-select * from event where id=2
-┌─id─┬────────────────time─┬─type─┬─pokemon_id─┐
-│  2 │ 2018-01-02 00:00:00 │    1 │          1 │
-│  2 │ 2018-01-02 00:00:00 │    2 │          1 │
-│  2 │ 2018-01-02 00:00:00 │    2 │          1 │
-└────┴─────────────────────┴──────┴────────────┘
+and just checking that our event table has stuff
 
-And
-SELECT
-    sumMerge(types_sum),
-    uniqMerge(unique_id)
-FROM event_aggs
-┌─sumMerge(types_sum)─┬─uniqMerge(unique_id)─┐
-│                   5 │                    1 │
-└─────────────────────┴──────────────────────┘
+now to the good parts
 
-Ok, lets insert some data and do benchmarking with our selecter
-config for inserter
-TABLE_NAME = "event"
-BULK_SIZE = 1000
-EVENTS_PER_DAY = 1000
-WORKERS = 5
-DB_NAME = "aggregating"
+regular select query that looks like this
+we could rewrite to make it look like this
 
+Wait and now to the good parts. Performance! I've run our bencmarking suite and results are as follows
 
-def generate_random_event(event_date: datetime.datetime) -> dict:
-    event_id = random.randint(0, 10)
-    event_type = random.randint(0, 3)
-    pokemon_id = random.randint(0, 10)
-    event_datetime = event_date.replace(
-        hour=random.randint(0, 23),
-        minute=random.randint(0, 59))
+-- swith to slides
 
-    return {
-        "id": event_id,
-        "time": event_datetime,
-        "type": event_type,
-        "pokemon_id": pokemon_id
-    }
-
-benchmarking event.
-SELECT sum(type) FROM aggregating.event
- attempt 0 took: 0.24256s
- attempt 1 took: 0.11743s
- attempt 2 took: 0.14443s
-
-SELECT sumMerge(types_sum) FROM aggregating.event_aggs
- attempt 0 took: 0.21557s
- attempt 1 took: 0.1241s
- attempt 2 took: 0.16787s
-
-todo: maybe use uniq. i think it's heavy
-TODO: bigger dataset; use other partition on work laptop
+TODO: need to do section about comparison
