@@ -55,6 +55,7 @@ we could rewrite to make it look like this
 
 Wait and now to the good parts. Performance! I've run our bencmarking suite and results are as follows
 
--- swith to slides
+-- switch to slides
 
 TODO: need to do section about comparison
+TODO: maybe query log on selector
