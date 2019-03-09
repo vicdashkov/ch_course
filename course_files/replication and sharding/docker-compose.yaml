@@ -15,7 +15,7 @@ services:
       - zookeeper
     volumes:
       - './data/ch1/ch:/var/lib/clickhouse/'
-      - './ch_configs:/etc/clickhouse-server/'
+      - './ch_configs_ch1:/etc/clickhouse-server/'
       - './dictionaries:/opt/dictionaries/'
     ports:
       - 9000:9000
@@ -32,7 +32,7 @@ services:
       - zookeeper
     volumes:
       - './data/ch2/ch:/var/lib/clickhouse/'
-      - './ch_configs:/etc/clickhouse-server/'
+      - './ch_configs_ch2:/etc/clickhouse-server/'
       - './dictionaries:/opt/dictionaries/'
     ulimits:
       nofile: 262144
@@ -44,7 +44,7 @@ services:
       - zookeeper
     volumes:
       - './data/ch3/ch:/var/lib/clickhouse/'
-      - './ch_configs:/etc/clickhouse-server/'
+      - './ch_configs_ch3:/etc/clickhouse-server/'
       - './dictionaries:/opt/dictionaries/'
     ulimits:
       nofile: 262144
@@ -56,7 +56,7 @@ services:
       - zookeeper
     volumes:
       - './data/ch4/ch:/var/lib/clickhouse/'
-      - './ch_configs:/etc/clickhouse-server/'
+      - './ch_configs_ch4:/etc/clickhouse-server/'
       - './dictionaries:/opt/dictionaries/'
     ulimits:
       nofile: 262144
