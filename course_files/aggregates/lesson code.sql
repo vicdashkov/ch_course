@@ -1,4 +1,3 @@
--- tab 1
 CREATE DATABASE aggregating
 
 CREATE TABLE aggregating.event
@@ -18,6 +17,7 @@ PARTITION BY toYYYYMM(hour)
 ORDER BY (hour, pokemon_id)
 AS SELECT
     pokemon_id,
+    countState() count_events,
     toStartOfHour(time) hour,
     sumState(type) AS types_sum,
     uniqState(type) AS unique_type,
@@ -33,9 +33,10 @@ INSERT INTO aggregating.event values(2, '2018-01-02 00:00:00', 3, 2);
 INSERT INTO aggregating.event values(2, '2018-01-02 00:00:00', 4, 3);
 
 -- tab 3
-SELECT sum(type), uniq(type), sumIf(type, pokemon_id % 2 = 0) FROM aggregating.event
+SELECT count(), sum(type), uniq(type), sumIf(type, pokemon_id % 2 = 0) FROM aggregating.event
 
 SELECT
+    countMerge(count_events),
     sumMerge(types_sum),
     uniqMerge(unique_type),
     sumIfMerge(why_would_i_need_this)
