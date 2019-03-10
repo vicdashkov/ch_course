@@ -12,7 +12,8 @@ CREATE TABLE merge_tree.event_time_batch
 ENGINE = MergeTree()
 PARTITION BY toYYYYMM(time)
 ORDER BY (time, id);
--- pay attention to order of fields
+-- Pay attention to order of fields, and please don't use such terrible order by fields
+-- We're running pokemon business, so we're kind of allowed to use a bit of magic.
 
 CREATE TABLE merge_tree.event_time_single
 (
