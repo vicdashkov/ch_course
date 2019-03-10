@@ -1,0 +1,118 @@
+Preparation:
+* rm data dir
+* rm preprocessed configs
+* slides
+* start docker
+* terminal with 4 tabs in separate desktop. connect to docker
+
+Welcome back
+
+Quick question. Why do we need cluster?
+Easy. because we need scalability and reliability.
+
+scalability comes with CH out of the box in a form of sharding or segmentation
+reliability also comes with ch, but we need to add Zookeeper to the mix
+
+enoght talk
+
+-- switch to vs code
+
+lets take a look at the code.
+so this is our new docker compose.
+I specify zookeper. 4 ch nodes
+and of course our lovely client.
+because this time we're actually going to use it
+
+what else is new. well, I added 4 separate
+macros files and attach them to every node separately
+What is macros in clickhouse? macros are variables that we can set
+and then use when we deal with distributed business.
+Soon we'll see it in action and I'm sure it will make it clear
+
+in our config.d dir we see 2 new files.
+remote servers and zookeper
+
+-- remote_server.xml
+
+remote server is our configuration for our cluster
+here we use simple schema with 2 shard 2 replicas each
+it means we've got replication factor of 2
+and we're going to store our data in 2 different chunks
+Pretty good and simple arrangment for starters
+You can setup many different topologies with clickhouse
+CH is actully extremely flexible.
+
+like You can specify as many clusters as you wish in the configuration.
+all of which can have different topologies
+and
+Replication works at the level of an individual table, not the entire server.
+meaning at least
+Replicated tables can have different names on different replicas.
+so it all gives us almost unlimited number of ways to complicate our lives
+
+Wow, that's a mouthful.
+
+-- swithc to zookeeper.xml
+
+our zookeeper file is quite a bit simpler. you can get by with this simple configuration like
+host name and port along with node index.
+
+what it will give us?
+
+-- switch to tabix execute query
+
+this! we've got our own cluster with shards and replicas, black jack and .. you know, all the rest.
+what do we do with it?
+well, this!
+
+-- tabix tab 2
+we can now create local and distributed tables
+local tables are the ones that will be replicated,
+and distributed are the ones that will be ... distributed
+pay attension to curly braces here. that is where macros come into play
+if we didn't setup macros, we would've executed this query on every node like this
+
+-- remove on cluster and remove substitution.
+which would've been very tedious. now we can just use on cluster
+cluase for most Data definiton queries
+
+as for distributed table,
+
+in the engine parameters we specify cluster name, database, local table and sharding_key, which is optional, but preferable
+
+we can write data in 2 ways.
+Write to local (docs say optimal)
+Write to distributed (quite a bit more convenient)
+
+ok, to wrap up lets make sure our stuff works
+
+-- switch tabix 3
+
+we execute first insert on ch1,
+and select from local and distributed
+
+-- swith to terminal
+
+if we select from ch2 we also see same deal
+ch3 local is empty while distributed has got our record
+
+ch 4 will have the same deal as ch3
+
+-- tabix again
+
+insert some stuff in distributed
+
+-- terminal
+
+and select again. we see everything seems to be working fine.
+not sure how much of a personal accomplishment this is,
+ch pretty much does all the heavy lifting, but still. good and exciting stuff
+
+-- switch to summary slide
+
+So should we use distributed talbes. Easy answer to me. Of course we should. Even if you're data
+is small now, most probably it will grow in the future, so might as well do it now.
+But switching from mono installatin to full fladge cluster is not such a hard task as well
+CH work extremely well on defaults, and proved to be very resilient in production
+
+Hope you enjoyed it as much as I did. See you next video.

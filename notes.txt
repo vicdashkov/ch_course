@@ -15,3 +15,5 @@ set_max_parralel_meticsas
 possibly separate lesson on global:
 https://clickhouse.yandex/docs/en/query_language/select/#select-distributed-subqueries
 https://clickhouse.yandex/docs/en/query_language/select/#join-clause
+
+todo: POSSIBLY: utilize Zookeper to replicate configuration updates, including dictionaries definition files.

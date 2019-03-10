@@ -1,5 +1,3 @@
-TODO: probably just add to cluster replication section
-
 ok lets dbl check that we still have our cluster working execute
 SELECT * FROM system.clusters
 

@@ -107,8 +107,14 @@ SUMMARY: it seems don't have to use separate date column anymore
 we can use toYYYYMM() or similar expression in partition by claouse,
 as for order by and primary key, you really need to benchmark your schemas.
 
-But remember to not use single inserts.
-I've seen very weird behaviour from ch with many single inserts even during today's small run. you can kill
-you server easy. Rool of thum that I read somewhere - don't insert more that twice per second.
+But, and this is a big one,
+I would still use date column. Especilly in newer versions of CH which allows us to
+be more flexible when specifying primary key other that order by key.
+This could make a lot of different, and as we saw, operations on date column could be
+seriously cheaper.
 
-Hope you like this video, and see you next video
+Also remember to not use single inserts.
+I've seen very weird behaviour from ch with many single inserts even during today's small run. you can kill
+you server easy. Rool of thumb that CH teams says somewhere - you probably don't want to insert more than once per second.
+
+Hope you liked this video, and see you next on the next one
