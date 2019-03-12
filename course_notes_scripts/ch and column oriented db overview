@@ -48,7 +48,7 @@ In typical row oriented DB we need to process large ammount of unneded data
 
 -- slide change
 
-In CODB we get only the data we need, less memory and, if we get it right, less CPU
+In CODB we get only the data we need, so we use less memory and, if we get it right, less CPU
 
 So underlying technology is good then. How about implementation?
 
@@ -61,12 +61,10 @@ Need more power get more nodes.
 
 -- slide change
 
-CH bad parts: this is not transactional DB. Consistency is not guarantted.
-Joins are not great, but there are workarouns)
-When it comes to deletion We've tried to delete 60G on a test ch.
-Didn' go very well.
-you can do it, but test it with your data and your setup first.
-Remember CH is not designed for deletion, so maybe just stay away.
+Bad parts, well, this is not transactional DB. Consistency is not guarantted.
+Joins are not great
+When it comes to deletion well there are ways. and I think it should be fine
+but Remember OLAP systems are not designed for deletion, so maybe just stay away.
 
 If you think this technology covers your requirements, please hope it for a journey.
 

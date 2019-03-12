@@ -9,6 +9,7 @@ preparation:
 * docker rm
 * vs code close file section
 * sign out tabix.io
+* Open on docket hub
 
 welcome back everyone and welcome to our next lesson
 
@@ -21,36 +22,42 @@ see what it is and what we can do with it.
 I always wanted to create Pokemon business
 And With Ch My dreams come true, finally.
 Anyway, For various aspects of my Pokemon business there’re other
-tools I can use, but when it comes to tracking evens associated with Pokemons, 
+tools I can use, but when it comes to tracking evens associated with Pokemons,
 I doubt there’s a better tool than CH.
 
 Yeah main theme of this course will be pokemons. why not. mind you I'm not a fun
 and have never seen as single episode of this animated series, so there will be
 factual mistakes about the piece. sorry in advance.
 
-Ok, so for the POC the easiest tool to start is Docker. We go to
+Ok, so for the POC the easiest tool to start is Docker.
+
+— browser
+
+We go to
 https://hub.docker.com/r/yandex/clickhouse-server/
 and there’s fairly standard stuff.
 They give us a command to start a server
 and a command to connct to it with a client.
 How very thougfull
 
-Ok, I run a first one. Eveerything seems to be fine so far. 
-Second one worked as well. We are connected. Lets take a look at what we have here 
+Ok, I run a first one. Eveerything seems to be fine so far.
+Second one worked as well. We are connected. Lets take a look at what we have here
 
-SHOW DATABASES 
-┌─name────┐ 
-│ default │ 
-│ system  │ 
-└─────────┘ 
+SHOW DATABASES
+┌─name────┐
+│ default │
+│ system  │
+└─────────┘
 
 show tables from system
 show tables from default
 
-I select tables from these DBs. Default is empty and 
+I select tables from these DBs. Default is empty and
 system has 32 rows in set
 Ok. We’ll take a look at some of these guys at a later time.
 As of now lets come back to docker.
+
+— Docket ps
 
 when I ran docker ps I see that ports are not open.
 I also strongly suspect that persistence is not set. dah
@@ -58,7 +65,7 @@ I also strongly suspect that persistence is not set. dah
 to remedy all this problems and to simplify development lets create docker compose.
 Which will look like this
 
-show project structure
+— show project structure
 
 For ch server I'm setting persistance with external volume
 I'm also attaching configs folder to proper dir from which
@@ -69,8 +76,8 @@ proper location in client docker image
 
 inside our ch_congigs dir, I've got 3 files
 first one is docker-related configs, we open up the ports here
-Then we've got standard umodified config.xml.
-You'll find a link to the file inside ch repo in lecture notes
+Then we've got standard umodified config.xml with bunc of interesting and not so much stuff
+
 And the last file is users.xml. In this file we can mange ch users. Setup permissions passwords etc.
 
 And the last file I have to mention is client configs.xml. This file is in project root. And here
@@ -82,6 +89,8 @@ What we've done here is broken down our one big congif.xml
 into a bit more managable chunks. Should we need to modify configs,
 We can just add an extra file to the dir, and ch will created preprocessed file for us
 based on the rules we specify in metatags. But we'll come back to it later
+
+Let’s try it out
 
 -- stop all containers
 -- start docker compose
@@ -98,8 +107,11 @@ there another client you can use. it's called tabix.io
 
 -- go to ui.tabix.io
 
-and if we head to the website, we'll be able to use web app to connect to our
-docker installation
+It looks pretty neat. A bit buggy, but still very powerfull.
+
+I’ll mostly be using Tabriz for this course. Be warned
+
+— switch to slides
 
 Ok, so we've got our playgroud ch up and running, and we're able to connect to it with the 2 amazing clients
 Good start
