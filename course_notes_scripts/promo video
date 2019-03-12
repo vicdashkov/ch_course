@@ -6,33 +6,37 @@ and I struggle with big data.
 
 -- slide change
 
-So many of us have to suffer from caffeine addiction only because we have to wait for hours for our quires to run.
-
--- slide cahnge
+So many of us have to suffer from caffeine addiction only because we have to wait for hours for our quires to run
 
 We have no choise but to constatly make and consume more and more coffee while waiting for yet another big data
 solution to fail on us with out of memory exception.
 
 Jokes aside though,
 
+— change
+
 I'm an engineer in a company that has to do complex anaytics on a datasest with many million rows and
 many terrabites of data.
-We've also, just like you, had play with ever growing cron jobs to precalculate yet another aggregate.
+
+We've also, just like you, had implement and maintain ever growing number of cron jobs to precalculate yet another aggregate.
 
 Well, fear no more. I've got a cure for you.
 
 -- slide change
 
-Clickhouse is a tool that answers any question on a datasests comprised of many terabites of data within seconds
+Clickhouse is a tool that answers any question on a datasests comprised of many terabites of data in seconds
 
 As a data scientist, you need to have a good grasp of your data.
-As an it decision maker, you need to make sure your system metrics show you current state of affairs, not old historical
+Or As an IT decision maker, you need to make sure your system metrics show you current state of affairs, not just old historical
 gurbage
 
 Then you've come to a right place
 
-Clickhouse was developed in Yandex to be very, very fast. And I trully belive it delivers
+Clickhouse was developed by Yandex to be very, very fast.
 
-Join me on this battle to fight and finally win the battle agains time.
+And I truly believe that it does deliver
+
+Join me on this battle to fight and finally win the war against time.
 Quiry execution time for now, but it's a start.
+
 See you inside the course!
