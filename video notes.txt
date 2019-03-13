@@ -1,0 +1,3 @@
+Basic setup
+* insert p0.5 in p1 at location   ~18s
+* cut p1 at ~6:39 and use p 2

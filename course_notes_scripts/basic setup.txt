@@ -11,7 +11,11 @@ preparation:
 * sign out tabix.io
 * Open on docket hub
 
-welcome back everyone and welcome to our next lesson
+welcome back everyone to our next video
+
+In this video we'll talk about the easiest way to setup CH
+and about the best way to organize our configs
+among other cool things
 
 Ok, so first we begin by creating POC,
 that is we're not sure about the technology yet, and wee need to play with it first,
@@ -118,3 +122,4 @@ Good start
 
 We'll wrap here for now
 Thank you so much and see you next video
+

@@ -1,6 +1,5 @@
 Preparation:
 * put down all dockers
-* code editor becnh scrips
 * slides in desktop
 * browser with tabix
 * browser with ch docs merge tree
@@ -11,6 +10,9 @@ Preparation:
 Hello everyone,
 In this lesson we'll talk about merge-tree family of CH engines
 
+We'll talk about when and why to use engines of this family,
+Among other usefull things
+
 CH team reccomends using engines of this family pretty much for most tasks
 They say those engines are the most advanced and feature reach
 and data replication is possible only with engines from this family
@@ -20,9 +22,11 @@ you'll start with some kind of merge tree table and stick to it for a long time
 
 So what is so special about these engines?
 When you insert bunch and bunch of data in CH,
-Merge tree will put all the parts wherever it can, and then merge the parts in background,
-In effect doesn't constatly rewrite the data. Which is very expensive
-so for us the whole process is dark magic.
+Merge tree will put all the files wherever it can, and then merge them in background,
+Rewriting data is very expensive, and clikhouse doesn't do it to save time.
+It just remembers where to look for parts
+
+for us the whole process stays ... dark magic. Which is good.
 All we see is that data is being injected. Fast.
 
 -- switch to tabix
@@ -40,10 +44,12 @@ some of the configs for this table
 
 These configs will be the main focus of this lecture
 
+-- tabix second tab
+
 If we look at the second tab,
 (all the code you'll find in course files)
 you'll notice that there are of course different
-ways to setup partitionain and order by for our tables
+ways to setup partitionain and order by clouses
 
 we can partition by time expression which would yield a name like this
 
@@ -51,7 +57,10 @@ we can partition by time expression which would yield a name like this
 
 You can refer to this partition with such a name to say delete or detach it at a later time by the way
 
-we can also specify an expression in order by clause
+we can also specify an expression in order by clause,
+like so
+
+confusing
 
 What is event worse, is that in older days docs would say
 
@@ -69,5 +78,6 @@ As of now we'll wrap. I'll just summarize by saying that for such a powerful
 table we have to specify surprisingly small amount of details at a creation time.
 And CH will take care of the rest.
 
+
 Join in me on a journey to determine the coolest setup for merge tree in the next video.
-see you next video
+see you next time.
