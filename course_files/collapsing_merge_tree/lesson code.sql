@@ -28,7 +28,7 @@ FROM collapsing_merge_tree.pokemon_age
 GROUP BY pokemon_id
 HAVING sum(sign) > 0
 
-SELECT * FROM pokemon_age FINAL
+SELECT * FROM collapsing_merge_tree.pokemon_age FINAL
 
 -- tab 4
 INSERT INTO collapsing_merge_tree.pokemon_age VALUES (10, 1, 'awesome', 1);
@@ -41,5 +41,7 @@ INSERT INTO collapsing_merge_tree.pokemon_age VALUES (10, 7, 'I want to live', 1
 INSERT INTO collapsing_merge_tree.pokemon_age VALUES (10, 8, 'I want to live so much', 1);
 INSERT INTO collapsing_merge_tree.pokemon_age VALUES (10, 9, 'yep, ready', 1);
 
-SELECT * FROM pokemon_age FINAL
+select * from collapsing_merge_tree.pokemon_age
+
+SELECT * FROM collapsing_merge_tree.pokemon_age FINAL
 -- you'll see correct results,

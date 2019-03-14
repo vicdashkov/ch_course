@@ -1,3 +1,35 @@
+* Remove transitions between windows
+
+
 Basic setup
 * insert p0.5 in p1 at location   ~18s
 * cut p1 at ~6:39 and use p 2
+
+###### intro to merge tree family
+* khm on 36s
+* 1:26s change
+* 1:33 khm
+* 1:44 started over "and now lets just try to create"
+* 2:34 -> 2:44 a bit ugly stuff
+* 2:57 fine
+* insert frame from 3:56(summary) into 3:47 and cut switch
+
+
+###### Bencmarking merge
+    Bencmarking merge tree p1:
+    * cut ~40s -> 1:42s
+    * at 2:18 long pause
+    * ~2:40 -> ~3:55 start over (to run our guys)
+    * 4:31 cut switch
+    * ~5:20 I think this is a good time... cut
+    * 6:05 fast forward all the way to end
+
+    Bencmarking merge tree p2:
+
+
+####### collapsing merge tree
+    p1:
+
+    p2:
+
+
