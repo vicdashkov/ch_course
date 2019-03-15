@@ -3,11 +3,7 @@ Preparation:
 * rm preprocessed configs
 * slides
 * browser tabix
-* vs with inserter
 * vs with course notes
-* activate venv for selecter
-
-TODO: try to updated ch version. I suspect sample may work:(
 
 Welcome back everyone.
 
@@ -26,13 +22,14 @@ ok. lets start by creating regular table
 
 ok so what we saw is of course regular select works,
 But sampling not so much.
-To fix it, we need to of course enable sampling
+To fix it, we need to of course to enable sampling
 
 let's fix it with proper sampling table
 
 -- switch to tabix tab 2
 
-Now when we select from this table ch will return an evenly pseudorandom data sample
+Now when we select from this table ch will return an evenly pseudorandom data sample.
+
 ok sort of makes sense. let's benchmark a bit
 
 -- switch to tab 3
@@ -43,15 +40,39 @@ and lets run our inserter and selecter,
 We've seen them in action, so we know what to expecte, I'll just note that
 I've changed configs accordingly with new dbs and table names
 
--- switch to users.xml
+refer to lesson files for the bash script
 
-Before we do though, please note that I enabled query log for my user,
+and
+
+Please note that I enabled query log for my user,
 It will help us to compare memory usage for our queries
 
 with command like this
 
 -- switch to tabix tab 4
 
+Refer to users.xml for an axample of config that enables query log
+
+-- open files on investigation
+
 So I put 365000000 events to our tables beforehand, and results are as follows
 
-TODO: discuss the results
+Dramatic pouse
+
+And I couldn't make sampling to work properly.
+There's the file called called sampling_investigation.
+
+You can give it a read, I'll just summarize by saying that
+I couldn't quite see any performance benefits from using sampling
+
+Even memory consuption didn't go down
+Good news is that if you dont use "sample" in your select query
+table with sampling enabled will work just as fine and won't take
+much more space as well.
+But I would strongly suggest to benchmark your schema. maybe you'll find a good
+combination of primary key, select clouse and so on to make it work.
+Plus maybe it will work for your more complex select statements
+
+Please let me know if you made it to work.
+
+See you next time

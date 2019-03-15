@@ -51,31 +51,6 @@ FROM sampling.pokemon_event
 SAMPLE 0.5
 
 -- tab 3
-CREATE TABLE sampling.bench_pokemon_event_sampling
-(
-  id UInt64,
-  time DateTime,
-  type UInt16,
-  pokemon_id UInt16
-)
-ENGINE = MergeTree()
-SAMPLE BY intHash32(id)
-PARTITION BY toYYYYMM(time)
-ORDER BY (time, intHash32(id));
-
-CREATE TABLE sampling.bench_pokemon_event_non_sampling
-(
-  id UInt64,
-  time DateTime,
-  type UInt16,
-  pokemon_id UInt16
-)
-ENGINE = MergeTree()
-PARTITION BY toYYYYMM(time)
-ORDER BY (time, intHash32(id));
-
--- tab 4
  SELECT query, formatReadableSize(memory_usage), query_duration_ms / 1000
  FROM system.query_log
  WHERE type = 2 AND event_date = today() ORDER BY event_time format Vertical
-

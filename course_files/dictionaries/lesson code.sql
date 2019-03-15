@@ -30,7 +30,7 @@ SELECT
     id AS event_id,
     dictGetString('pokemon_dict', 'name', toUInt64(pokemon_id)) AS name,
     dictGetString('pokemon_dict', 'pet_name', toUInt64(pokemon_id)) AS pet_name
-FROM pokemon.event_2_distributed
+FROM dicts.event
 
 -- tab 4
 system reload dictionaries

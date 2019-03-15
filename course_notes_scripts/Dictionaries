@@ -5,9 +5,10 @@ Preparation:
 * vs code lesson files
 * tabix
 
-Hello everyone
+hi everyone, this is Vic again, and
 
 Today we'll talk about dictionaries
+
 Dictionaries in Ch allows us to store, well, dictionaries in ram.
 
 We can connect CH dictionaries to external sources like databases and csv files
@@ -17,7 +18,7 @@ And csv files could be very useful if you have some heavy jobs running in other 
 You can than mount some kind of network drive on your CH node, and access the result of this job streignt from CH
 Very powerful.
 
-We event went as war as using result of dictionary lookups as default values.
+We event went as war as using result of dictionary lookups as default values at insertion time
 A bit dirty, but works like magic
 
 -- change slide to dict layouts
@@ -27,7 +28,7 @@ But docs reccomend using flat, hashed and complex_key_hashed layouts
 These layouts provide optimal processing speed.
 
 In this video, we'll talk about flat dictionary
-The dictionary key has the UInt64 type and the value is limited to 500,000.
+The dictionary key has to have UInt64 type and the value is limited to 500,000 elements
 Ch will not create flat dictionary if more keys are discovered
 
 Ok, to the action now
@@ -52,9 +53,9 @@ there's more tinkering you can do, but this will do for now
 and let's take a quick look at pokemon.csv. where we see 3 columns we've described before
 Please note we've got some empty fields for zalechu and bixby
 
-ok, let's move to the action. boot up our ch
+is it from pokemons?
 
--- run docker-compose up ch
+ok, let's move to the action. i've already got our ch up and running
 
 all seems fine now. lets dbl check ch sees our dict
 
@@ -64,7 +65,7 @@ SELECT * FROM system.dictionaries
 
 and here we see some basic info about our dict
 
-lets quick create a table for, say, event, as usual
+lets quickly create a table for, say, event, surprise
 Structure should be fairly familiar to you by now
 
 And insert some stuff as well
@@ -73,22 +74,23 @@ let's now try to get something out of our dict
 
 -- switch to tabix tab 3
 
-executing select, and here we can see default values for pokemons
-with ids not in our dict.
+executing select, and here we can see default values (solo and rex)
+for pokemons that are not present in our CSV
 
-Don't like the casing? no problem
+Don't like the filed name? no problem we can hot reload our dictionaries on demand
+let's try
 
--- rename Name -> name; PetName -> pet_name
+-- pet_name -> super_pet_name
 -- swithc tabix 4; reload
 -- rename fields in query
-
-Yep, we can hot reload even structure for our dictionaries
 
 bonus point, lets create dict engine!
 
 -- tabix tab 5
 
-and we can do a join here or a simple select. could be also pretty convenient
+and we can do a join here or a simple select.
+so now our dict is just like regular table.
+could be very convenient sometimes
 dictionary engine was added just recently, so that's nice
 
 Anyway.
@@ -96,4 +98,4 @@ Anyway.
 -- swithc to slides with summary
 
 I hope you enjoyed this video as much as I did,
-see you next video!
+see you on the next one!
