@@ -1,33 +1,66 @@
 * insert ch logo before and after videos
 * Remove transitions between windows
 * bonus point do the sound a bit
+* bouns point intro music
 * need to discuss changes after initial editing
+* edit promo video to use pieces from the course
+* all time locations are approximate
+* good knowlege of english is requred. You'd have to understand what I'm talking about to judge how to cut sometimes
+* I would appreciate artistic editing
+
+1__Promo:
+* start ~30s
+* 1:30 long pause
 
 
-Basic setup
-* insert p0.5 in p1 at location   ~18s
-* cut p1 at ~6:39 and use p 2
+2__overview:
+* cut ~58s -> 1:08 (this image was borrowed)
+* Cut 2:29 -> 2:45 (to summarize)
+* "see you next video" stuff use 3:34->3:43
 
-###### intro to merge tree family
-* khm on 36s
+
+3_p1__Basic setup
+* ~1.12 cut switch
+* ~1.42 is fine, can leave
+* ~2:44 play with pauses
+* ~3:01 long pouse
+* ~3:27 add explonatory text: "the directory"
+* ~5:35 add explonatory text: "errors"
+* ~6:43 use 3_p2
+
+3_p2__basic setup
+* ~1:03 cut switch
+
+4__intro merge tree family
+* cut khm on 36s
 * 1:26s change
-* 1:33 khm
+* 1:25 -> 1:35 started over (i'm already connected to...)
 * 1:44 started over "and now lets just try to create"
-* 2:34 -> 2:44 a bit ugly stuff
+* 2:11 fine
+* 2:17 add text "of this and next lectures"
+* 2:34 -> 2:44 a bit ugly stuff. try to fix it. if not that's fine
 * 2:57 fine
 * insert frame from 3:56(summary) into 3:47 and cut switch
 
 
-###### Bencmarking merge
-    Bencmarking merge tree p1:
-    * cut ~40s -> 1:42s
-    * at 2:18 long pause
-    * ~2:40 -> ~3:55 start over (to run our guys)
-    * 4:31 cut switch
-    * ~5:20 I think this is a good time... cut
-    * 6:05 fast forward all the way to end
+5_p1__bencmarking merge tree p1:
+* ~32s pause and switch
+* ~45s-50s keep: "this is not a python course ..." cut till 1:42 "in inserter.py we've got our..."
+* at 2:18 long pause
+* ~2:40 -> ~3:55 cut (to run our guys)
+* 4:31 cut switch
+* ~5:05->5:20 cut; I star over
+* 6:05 fast forward all the way to end
+* 6:50 slighly slow down to show the command. magnify (enlarge) the command in terminal
 
-    Bencmarking merge tree p2:
+5_p2__bencmarking merge tree p2
+* this is continuation of the lesson
+* starts at ~48s
+* 48s. enlarge command "./bench_selecter.sh"
+* 1:45s -> 1:51s cut switch (start from additionally...)
+* 2:08 long pause
+* 2:13->2:41 cut
+# TODO: maybe need to re
 
 
 ####### collapsing merge tree
