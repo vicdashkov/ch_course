@@ -17,7 +17,7 @@ services:
       - './data/ch1/ch:/var/lib/clickhouse/'
       - './ch_configs:/etc/clickhouse-server/'
       - './dictionaries:/opt/dictionaries/'
-      - './ch_configs/macros_ch1.xml:/etc/clickhouse-server/config.d/macros_ch1.xml'
+      - './ch_configs/macros_ch1.xml:/etc/clickhouse-server/config.d/macros.xml'
     ports:
       - 9000:9000
       - 8123:8123
@@ -35,7 +35,7 @@ services:
       - './data/ch2/ch:/var/lib/clickhouse/'
       - './ch_configs:/etc/clickhouse-server/'
       - './dictionaries:/opt/dictionaries/'
-      - './ch_configs/macros_ch2.xml:/etc/clickhouse-server/config.d/macros_ch2.xml'
+      - './ch_configs/macros_ch2.xml:/etc/clickhouse-server/config.d/macros.xml'
     ulimits:
       nofile: 262144
 
@@ -48,7 +48,7 @@ services:
       - './data/ch3/ch:/var/lib/clickhouse/'
       - './ch_configs:/etc/clickhouse-server/'
       - './dictionaries:/opt/dictionaries/'
-      - './ch_configs/macros_ch3.xml:/etc/clickhouse-server/config.d/macros_ch3.xml'
+      - './ch_configs/macros_ch3.xml:/etc/clickhouse-server/config.d/macros.xml'
     ulimits:
       nofile: 262144
 
@@ -61,7 +61,7 @@ services:
       - './data/ch4/ch:/var/lib/clickhouse/'
       - './ch_configs:/etc/clickhouse-server/'
       - './dictionaries:/opt/dictionaries/'
-      - './ch_configs/macros_ch4.xml:/etc/clickhouse-server/config.d/macros_ch4.xml'
+      - './ch_configs/macros_ch4.xml:/etc/clickhouse-server/config.d/macros.xml'
     ulimits:
       nofile: 262144
 

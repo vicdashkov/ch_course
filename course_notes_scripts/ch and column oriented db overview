@@ -12,7 +12,8 @@ some cool numbers from Yandex as of 2017
 500 servers
 total throughput of query processing is up to two terabytes per second
 
-One of the reason is underlying techonlogy: CODB
+One of the reason for such and incredile performance
+is underlying techonlogy: CODB
 
 -- slide change
 
@@ -63,14 +64,14 @@ Need more power get more nodes.
 
 Bad parts, well, this is not transactional DB. Consistency is not guarantted.
 Joins are not great
-When it comes to deletion well there are ways. and I think it should be fine
-but Remember OLAP systems are not designed for deletion, so maybe just stay away.
 
-If you think this technology covers your requirements, please hope it for a journey.
+When it comes to deletion,  well there are ways. and I think it should be fine
+but Remember OLAP systems are not designed for deletion, so maybe just stay away.
 
 -- slide change
 
-see you next video.
 
-TODO: POSSIBLY LINK: Scales very well vertically
-TODO: POSSIBLY LINK: Horizontally scalable
+If you think this technology covers your requirements, please hope it for a journey.
+
+
+see you next video.

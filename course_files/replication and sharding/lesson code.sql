@@ -1,7 +1,5 @@
--- tab 1
 SELECT * FROM system.clusters
 
--- tab 2
 CREATE DATABASE pokemon_cluster on cluster pokemon
 
 CREATE TABLE pokemon_cluster.event_local on cluster pokemon
@@ -24,7 +22,6 @@ CREATE TABLE pokemon_cluster.event_distributed on cluster pokemon
 )
 ENGINE = Distributed(pokemon, pokemon_cluster, event_local, rand())
 
--- tab 3
 -- we are connected to ch1
 INSERT INTO pokemon_cluster.event_local VALUES(122, '2018-01-01 00:00:00', 33, 2222)
 

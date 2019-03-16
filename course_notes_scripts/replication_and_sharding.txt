@@ -4,6 +4,7 @@ Preparation:
 * slides
 * start docker
 * terminal with 4 tabs in separate desktop. connect to docker
+* vs code with lesson files
 
 Welcome back
 
@@ -17,7 +18,8 @@ enoght talk
 
 -- switch to vs code
 
-lets take a look at the code.
+lets take a look at the code and configs.
+
 so this is our new docker compose.
 I specify zookeper. 4 ch nodes
 and of course our lovely client.
@@ -25,9 +27,12 @@ because this time we're actually going to use it
 
 what else is new. well, I added 4 separate
 macros files and attach them to every node separately
-What is macros in clickhouse? macros are variables that we can set
+What is macros you ask
+in clickhouse macros are variables that we can set
 and then use when we deal with distributed business.
 Soon we'll see it in action and I'm sure it will make it clear
+
+for now just remember xml structure
 
 in our config.d dir we see 2 new files.
 remote servers and zookeper
@@ -46,7 +51,7 @@ like You can specify as many clusters as you wish in the configuration.
 all of which can have different topologies
 and
 Replication works at the level of an individual table, not the entire server.
-meaning at least
+meaning
 Replicated tables can have different names on different replicas.
 so it all gives us almost unlimited number of ways to complicate our lives
 
@@ -57,6 +62,11 @@ Wow, that's a mouthful.
 our zookeeper file is quite a bit simpler. you can get by with this simple configuration like
 host name and port along with node index.
 
+to run all this goodness
+we can just do slightly lengthier docker-compose command
+
+-- docker-compose up ch1 ch2 ch3 ch4
+
 what it will give us?
 
 -- switch to tabix execute query
@@ -65,10 +75,20 @@ this! we've got our own cluster with shards and replicas, black jack and .. you 
 what do we do with it?
 well, this!
 
--- tabix tab 2
 we can now create local and distributed tables
+
+and all of the tables will appear on every node specified in our cluster
+
+-- show terminal show databases
+
+as you can see all the databases and tables should be on every node
+
+-- back to tabix
+
 local tables are the ones that will be replicated,
 and distributed are the ones that will be ... distributed
+that is they are present on every node and act as a view to all of our local tables
+
 pay attension to curly braces here. that is where macros come into play
 if we didn't setup macros, we would've executed this query on every node like this
 
@@ -104,7 +124,7 @@ insert some stuff in distributed
 
 -- terminal
 
-and select again. we see everything seems to be working fine.
+and select again. from all the nodes we see everything seems to be working fine.
 not sure how much of a personal accomplishment this is,
 ch pretty much does all the heavy lifting, but still. good and exciting stuff
 

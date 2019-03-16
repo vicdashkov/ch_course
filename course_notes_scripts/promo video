@@ -2,11 +2,9 @@ Hi. My name is Viktor
 
 -- slide change
 
-and I struggle with big data.
+and I’m a coffee addict
 
--- slide change
-
-So many of us have to suffer from caffeine addiction only because we have to wait for hours for our quires to run
+So many of us have to suffer from caffeine addiction only because we have to wait for our quires to run. And it takes hours on big data
 
 We have no choise but to constatly make and consume more and more coffee while waiting for yet another big data
 solution to fail on us with out of memory exception.
@@ -15,10 +13,10 @@ Jokes aside though,
 
 — change
 
-I'm an engineer in a company that has to do complex anaytics on a datasest with many million rows and
+I'm an engineer in a company that has to do complex anaytics on a datasest with many trillions of rows and
 many terrabites of data.
 
-We've also, just like you, had implement and maintain ever growing number of cron jobs to precalculate yet another aggregate.
+We've also, just like you, had  to implement and maintain ever growing number of cron jobs to precalculate yet another aggregate.
 
 Well, fear no more. I've got a cure for you.
 
