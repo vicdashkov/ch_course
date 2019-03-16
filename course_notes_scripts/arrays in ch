@@ -8,15 +8,19 @@ Preparation:
 Welcome back everyone
 Today we'll talk about arrays.
 
-One of the main reason for using arrays is the fact that we're not suppose to use joins in CH
-We're suppose to store our data in very wide tables,
-and arrays allow us to have one to many relationships with such an arrangement
+One of the main reason for using arrays is the fact
+that we're not suppose to use joins in CH
 
-Let's just streight to the business to get a better grasp of what I'm talking about
+We're suppose to store our data in very wide tables,
+and arrays allow us to have one to many relationship with such an arrangement
+
+Let's just go streight to the business to get a better grasp of what I'm talking about
 
 -- switch to tabix tab 1
 
 so here we're of couse creating simple table with a filed of type Array(UInt16)
+
+and we can insert just like so
 
 When we select we see nothing that would surprise us
 
@@ -28,16 +32,21 @@ We'll start simple with arrayMap
 
 so here we're just resolving our pokemon's id to names with the help of our
 good old dictionary.
-straightforward enough. but not exactly what we're used to in relational world
+
+good place to practice this weird syntax again
+
+straightforward enough. but not exactly what we're used to in the relational world
 Let's fix that
 
-And Array join is to the help, but a coinsidence is a bit more interesting
+And Array join is to the help, by a coinsidence it is a bit more interesting too
 
 -- swith to tab, execute
 
 usually functions don't change a set of rows, just the values
-The 'arrayJoin' function takes each row and generates a set of rows esentialy unfolding our result set
-enought of CH docs talk. What is essentially happening here is with
+The 'arrayJoin' function takes each row and generates
+a set of rows esentialy unfolding our result set
+
+but enought of CH docs talk. What is essentially happening here is with
 the clause in line 3, we're resolving names with array join
 but in lin 4 we're unfolding our arrays, and in essence we get denormalized table with
 mapping pokemon name to pokemon id
@@ -50,7 +59,8 @@ which would be more familiar to most of us
 
 Here we at least see Regular (air quotes) join
 
-More weirdness with arrayEnumerate which pretty much enumarates every row in a subset
+we can introduce event More weirdness with arrayEnumerate
+which pretty much enumarates every row in a subset
 Could be useful. I think
 
 -- switch to summary
@@ -61,9 +71,9 @@ model more complex data
 In particular, we've talked about arrayMap
 technicuqe that allows us to map a value to another value;
 And we've talked about arrayJoin. Pretty weird function that unfolds our
-arrays for us, so we can view our data plain denormalized table
+arrays for us, so we can view our data as a plain denormalized table
 
-Array in ch allow us to model one to many relatioinships in the world of wide tables, so we
+Arrays in ch allow us to model one to many relatioinships in the world of wide tables, so we
 can avoid using joins, which are notoriusly slow in solutions like CH
 
 Hope you enjoyed it as much as I did, and see you next video!

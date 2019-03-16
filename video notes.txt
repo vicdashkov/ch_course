@@ -1,4 +1,7 @@
+* insert ch logo before and after videos
 * Remove transitions between windows
+* bonus point do the sound a bit
+* need to discuss changes after initial editing
 
 
 Basic setup
@@ -33,3 +36,8 @@ Basic setup
     p2:
 
 
+#### sampling
+    * start 15s
+    * ~46 second cut transition
+    * ~57 -> 2m 05s fast forward and cut (select insert)
+    * (to fix this we need of course to enable 2:25) -> (lets create a proper ~3:34)

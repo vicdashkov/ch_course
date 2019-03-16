@@ -12,23 +12,26 @@ not fast enough. I mean there's always ways to improve.
 And CH team knows it. so they implemented aggregates.
 Most of you know what aggregates are. I'll just quicly say that
 aggregates are pretty much precompute values
+
 Sometimes teams decide to precompute things with external job,
 and save results to storage, like another db or a table
 And it works. but this approach is not the best.
-It's hard to maintain the jobs, and results could be hard to use on ever changing queries
+It's hard to maintain the jobs, and results
+could be hard to use on ever changing queries
 
 CH allows us to do aggregates
-Again a bit of ch docs talk
-ClickHouse replaces all rows with the same primary key (or more accurately, with the same sorting key)
+Again a bit of docs talk
+ClickHouse replaces all rows with the same primary key
+(or more accurately, with the same sorting key)
 with a single row that stores a combination of states of aggregate functions.
 But this all happens within data part. If data with same sorting(or primary) key
 goes to different data parts, data will not be merged
 
-ok, let's play a bit to make it a bit more visual
+phew, let's play a bit to make it a bit more visual
 
 We would usually want to create materialized view with aggregates,
 So our data floes from our master table to aggregated table without us
-doing anything at all. Which is my prefered state of things
+doing anything at all. Which is my prefered state of things. if you ask me
 
 -- change to tabx
 
@@ -37,9 +40,11 @@ And just alongside it we put our MV
 
 please pay attention to sumState and uniqState functions that
 we specify in our select clause.
-so what we achive here is precompute values for sum of type of events
-and uniq number of pokemon id
+so what we achive here is precompute values for sum of types of events
+and uniq number of pokemon ids
 grouped by id and time.
+
+we also have some very weird aggregate, just to show off honestly
 
 -- change tabix
 ok lets see how to use it now.
@@ -48,21 +53,57 @@ inserting some values in
 
 and just checking that our event table has stuff
 
-now to the good parts
+now to the good part
 
 regular select query that looks like this
 we could rewrite to make it look like this
 
-Wait and now to the good parts. Performance! I've run our bencmarking suite and results are as follows
+What is different is -Merge suffix we add to aggregating functions
+We basically substitute -State that we used in selectinto
+to -Merge in select clouse.
+simple enough
+
+And now to the good part. Performance!
+I've run our bencmarking suite and results are as follows
 
 -- switch to slides
 
-what is interesting, as I was playing with our benchmarking i noticed
+Our weird select from aggregate took fraction of a second
+
+-- next slide
+
+all numbers match, so there should be no errors in our aggregate or
+in our select query
+
+clickhouse had to process only 96 thousand rows instead of 365 million rows
+for regular table
+
+this is job well done.
+
+We should ask for a bonus
+
+Little interesting thing though
+
+If you remember our small query log table with all the query
+details,
+Well it shows that qurieng aggregate is a bit more
+memory demanding than a regular table
+
+This is very interesting observation I did not expect to learn
+
+What is also good, is that
 ingestion of data doesn't seem to take any longer
 when we have aggregates
+So you should not be afraid to use them in production
 
-when I executed select count I saw the nuber 96360
-so ch collapsed 365000000 records into only 96360
+Let's wrap
 
-TODO: need to do section about comparison
-TODO: maybe query log on selector
+-- switch to slides
+
+Aggregates are amazing. You can add as many of them as you want
+Ingestion should not suffer.
+
+Performance will depend on the characteristics of your setup,
+but you'll probably see serious boost
+
+Hope you enjoyed this video. See you in the next one.
