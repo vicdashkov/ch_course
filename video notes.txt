@@ -94,10 +94,8 @@
 * 3:55 start over "structure has to represent your ..."
 * 4:43 awkward laughing is fine
 * 4:59 vidos ends. phrase "alright, lets move to the action" start on part 2
-TODO: need to rename in drive
 
 7_p2__dictionaries
-TODO: need to rename in drive
 * 1:33 start over "lets quickly create a table..."
 * 2:19 small pauses until here are fine. could edit, but don't have to
 * 3:10 long pause
@@ -111,7 +109,6 @@ TODO: need to rename in drive
 * 1:11 cut to scene from slides
 * at around 1:50 - 2:10 make less awkward. optional
 * 6:20 transition to summary
-TODO: need to rename in drive
 
 
 9__arrays

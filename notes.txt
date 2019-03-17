@@ -4,7 +4,7 @@ Real use cases from industry. (take a look at altinity site) -- maybe for overvi
 
 presentation "internals" has benchmark results for adding more nodes to cluster
 
-TODO: BENCHMARD: dict in dict syntax and as engine https://clickhouse.yandex/docs/en/operations/table_engines/dictionary/
+possibly benchmark dict in dict syntax and as engine https://clickhouse.yandex/docs/en/operations/table_engines/dictionary/
 
 Thing about ignore()
 
@@ -16,4 +16,4 @@ possibly separate lesson on global:
 https://clickhouse.yandex/docs/en/query_language/select/#select-distributed-subqueries
 https://clickhouse.yandex/docs/en/query_language/select/#join-clause
 
-todo: POSSIBLY: utilize Zookeper to replicate configuration updates, including dictionaries definition files.
+POSSIBLY: utilize Zookeper to replicate configuration updates, including dictionaries definition files.

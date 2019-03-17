@@ -17,7 +17,7 @@ RESULTS OF INSERTS:
 2018-12-25 09:30:46 - table: event_1_distributed - inserted: 18250 - took: 366.77 - bulk size: 5 - events per day: 50 - workers: 10
 2018-12-25 09:40:45 - table: event_1_single_node - inserted: 18250 - took: 490.9 - bulk size: 5 - events per day: 50 - workers: 10
 
-RESULTS OF SELECTS: TODO: maybe redo with docker limits
+RESULTS OF SELECTS:
  2018-12-25 09:43:28
 SELECT count() from pokemon.event_1_single_node group by toYYYYMM(time)
  attempt 0 took: 0.74587s
