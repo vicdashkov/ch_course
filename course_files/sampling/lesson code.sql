@@ -51,6 +51,7 @@ FROM sampling.pokemon_event
 SAMPLE 0.5
 
 -- tab 3
- SELECT query, formatReadableSize(memory_usage), query_duration_ms / 1000
- FROM system.query_log
- WHERE type = 2 AND event_date = today() ORDER BY event_time format Vertical
+-- query wouldn't work in tabix
+SELECT query, formatReadableSize(memory_usage), query_duration_ms / 1000
+FROM system.query_log
+WHERE type = 2 AND event_date = today() ORDER BY event_time format Vertical

@@ -31,6 +31,7 @@
 3_p2__basic setup
 * ~1:03 cut switch
 
+
 4__intro merge tree family
 * cut khm on 36s
 * 1:26s change
@@ -54,23 +55,53 @@
 * 6:50 slighly slow down to show the command. magnify (enlarge) the command in terminal
 
 5_p2__bencmarking merge tree p2
-* this is continuation of the lesson
-* starts at ~48s
-* 48s. enlarge command "./bench_selecter.sh"
-* 1:45s -> 1:51s cut switch (start from additionally...)
-* 2:08 long pause
-* 2:13->2:41 cut
-# TODO: maybe need to re
+TODO: need to reshoot the video
 
 
-####### collapsing merge tree
-    p1:
+6__collapisng merge tree
+* ~30-35 cut started over (still I think it's important to talk about..)
+* ~43s cut switch
+* 51s->53s pretty long pause
+* screen with create database and create table end at 1:13
+* skip till 3:57
+* 3:55 - I start over "lets now try to insert"
+* 4:41 fine
+* 5:41 -> 6:13 cut
+* 7:12 fine
+* 8:25-8:50 long pause and start again "and it just happened in from of our eyes"
+* 9:45 try to remove "i think you can do it"
+* 9:55 long pause
+* 10:05->10:49 I start over "so to summarise"
+* 11:04 cut switch
+* 11:38 nothing happens after. video is finished
 
-    p2:
+
+7__dictionaries
+TODO: reshoot
+probably don't use tabix
 
 
-#### sampling
-    * start 15s
-    * ~46 second cut transition
-    * ~57 -> 2m 05s fast forward and cut (select insert)
-    * (to fix this we need of course to enable 2:25) -> (lets create a proper ~3:34)
+8__sampling
+TODO: reshoot
+probably don't use tabix
+
+
+9__arrays
+* 1:50 text "pass argument"
+* 2:20 start over
+* 3:24 start over "what is essentially happening here"
+* 4:02 start over "we can also make it a bit cleaner with..."
+* 5:23 long pause and small start over "that was fun"
+* 5:35 cut transition
+
+
+10__aggregates
+* 34s start over "I mean"
+* 1:52 cut switch
+* 2:11 start over "which is my..."
+* 3:29 fast forward
+* 3:45 start over "and just checking"
+* 4:48 fine. not sure what it is, but fine
+* 5:15 switch
+* 5:54 pause
+* 6:39 start over "aggregates are amazing"
