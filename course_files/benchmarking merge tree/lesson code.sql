@@ -74,7 +74,7 @@ ENGINE = MergeTree()
 PARTITION BY date
 ORDER BY (date, id);
 
--- tab 2
+------
 SELECT table, formatReadableSize(size) as size, rows FROM (
     SELECT
         table,

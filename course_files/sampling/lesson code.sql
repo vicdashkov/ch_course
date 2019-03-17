@@ -1,5 +1,3 @@
--- tab 1
-
 CREATE DATABASE sampling
 
 CREATE TABLE sampling.event
@@ -26,8 +24,7 @@ SELECT *
 FROM sampling.event
 SAMPLE 1/10
 
-
--- tab 2
+------
 CREATE TABLE sampling.pokemon_event -- pokemon here signifies that we got sampling right this time. don't ask
 (
   id UInt64,
@@ -50,7 +47,7 @@ SELECT count() * 2 -- we need to offset here
 FROM sampling.pokemon_event
 SAMPLE 0.5
 
--- tab 3
+------
 -- query wouldn't work in tabix
 SELECT query, formatReadableSize(memory_usage), query_duration_ms / 1000
 FROM system.query_log

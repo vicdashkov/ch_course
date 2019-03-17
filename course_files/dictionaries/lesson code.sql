@@ -1,9 +1,6 @@
--- tab 1
-
 SELECT * FROM system.dictionaries
 
--- tab 2
-
+------
 CREATE DATABASE dicts
 
 CREATE TABLE dicts.event
@@ -25,17 +22,18 @@ values
 (4, 2, 51228),
 (5, 2, 1111)
 
--- tab 3
+------
 SELECT
     id AS event_id,
+    pokemon_id,
     dictGetString('pokemon_dict', 'name', toUInt64(pokemon_id)) AS name,
     dictGetString('pokemon_dict', 'pet_name', toUInt64(pokemon_id)) AS pet_name
 FROM dicts.event
 
--- tab 4
+------
 system reload dictionaries
 
--- tab 5
+-----
 CREATE TABLE dicts.pokemon_names
 (
     id UInt64,

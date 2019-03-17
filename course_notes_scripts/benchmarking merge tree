@@ -72,10 +72,10 @@ and run the tests and we'll come back to results once it's done
 -- fast forward
 
 Welcome back. Our insertion is complete.
-I'f you followed along you noticed that it took us quite a bit of time
+If you followed along you noticed that it took us quite a bit of time
 to insert paltry 3650 entries
 And the blame goes to single inserts
-CH really hates tham and performce poorly when we insert to often,
+CH really hates them and performce poorly when we insert to often,
 We'll talk about it a bit more a bit later
 
 As of now lets run selecter.
@@ -97,20 +97,21 @@ These 2 logs should help us decide on the best configs for our tables
 
 Additionaly We can get some idea about the sizes of our tables with this command
 
--- switch to tabix tab 2
+-- execute sizes query from lessons notes
 
-Armed with new tools and trics,
-we now can paint slightly better picture about our schemas.
+Armed with the new tools and trics,
+we can now paint slightly better picture about our schemas.
 In the backgroud I put 365000000 items into each of our tables
 1000000 entries per day
 
-I've assambled all the info and created this table
+and then I've assambled all the info from our logs and quries
+and created this table
 
 -- slides with tables
 
 Just as a reminder;
 tables with suffix single were bombarded with 1000 items per batch
-and tables with suffix batch were bombardered with 100000 items per batch
+and tables with suffix batch were gently inserted with 100000 items per batch
 
 So
 
@@ -130,7 +131,7 @@ I also run 2 different queries on event_data_batch tables.
 One grouped by date and the other grouped by time
 and group by date was almost twice as fast as group by time
 
-And the most surprising numbers are the table sizes
+And the most surprising numbers to mee, are the table sizes
 event_time_order_func with time expression in order
 by clouse takes the most space. I'm not quite sure why. Any ideas? let me know!
 

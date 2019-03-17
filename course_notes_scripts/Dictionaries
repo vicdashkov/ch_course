@@ -3,7 +3,7 @@ Preparation:
 * rm preprocessed configs
 * slides
 * vs code lesson files
-* tabix
+* client connected
 
 hi everyone, this is Vic again, and
 
@@ -18,7 +18,7 @@ And csv files could be very useful if you have some heavy jobs running in other 
 You can than mount some kind of network drive on your CH node, and access the result of this job streignt from CH
 Very powerful.
 
-We event went as war as using result of dictionary lookups as default values at insertion time
+You can even go as far as using result of dictionary lookup as a default values at insertion time
 A bit dirty, but works like magic
 
 -- change slide to dict layouts
@@ -28,8 +28,12 @@ But docs reccomend using flat, hashed and complex_key_hashed layouts
 These layouts provide optimal processing speed.
 
 In this video, we'll talk about flat dictionary
-The dictionary key has to have UInt64 type and the value is limited to 500,000 elements
+The dictionary key for Flat has to have UInt64 type
+and the value is limited to only 500,000 elements
 Ch will not create flat dictionary if more keys are discovered
+
+This is very basic dictionary, but it's simple to understand and just enough to demonstrate
+the concept
 
 Ok, to the action now
 
@@ -42,53 +46,64 @@ this is pretty much all you need to do to start using dict in CH
 
 important fileds in pokemon_dictionary.xml are
 dictionary name
+
 lifetime (ch will update our dict at random within specified range)
+
 layout (flat in our case, with limited number of keys)
+
 and structure.
+
 Structure has to represent your csv file.
-In our case i've got pokemon id field and mandatory id tag,
-as well as pokemon name and pokemon pet name (do pokemons themselfs have pets? not sure)
-there's more tinkering you can do, but this will do for now
+In our case i've got pokemon id field in the mandatory id tag,
+as well as pokemon name and pokemon pet name (do pokemons themselfs have pets? and do these pets have names?
+not sure)
+
+there's more tinkering you can do on dictionaries, but this will do for now
 
 and let's take a quick look at pokemon.csv. where we see 3 columns we've described before
-Please note we've got some empty fields for zalechu and bixby
-
-is it from pokemons?
+Please note we've got some empty fields for zalechu and bixby.
+And this is allowed in clickhouse. As far as csv file is valid CH will not complain
 
 ok, let's move to the action. i've already got our ch up and running
 
-all seems fine now. lets dbl check ch sees our dict
+all seems fine.
+lets dbl check that ch sees our dict
 
--- switch to tabix
-
-SELECT * FROM system.dictionaries
+-- SELECT * FROM system.dictionaries
 
 and here we see some basic info about our dict
 
-lets quickly create a table for, say, event, surprise
-Structure should be fairly familiar to you by now
+lets quickly create a table for, say, event, surprise surprise
+Structure for the table should be fairly familiar to you by now
 
 And insert some stuff as well
 
 let's now try to get something out of our dict
 
--- switch to tabix tab 3
-
 executing select, and here we can see default values (solo and rex)
-for pokemons that are not present in our CSV
+for the pokemons that are not present in our CSV
 
-Don't like the filed name? no problem we can hot reload our dictionaries on demand
+-- show csv
+
+our guy with id 1111 is not present in csv, so we assign default values solo and rex
+
+you find pet_name to be too boring of a name? no problem we can change and
+hot reload our dictionaries on demand
 let's try
 
 -- pet_name -> super_pet_name
--- swithc tabix 4; reload
+-- execute select
+-- reload dictionary
 -- rename fields in query
 
-bonus point, lets create dict engine!
+Amazing
 
--- tabix tab 5
+bonus point, lets create dict engine, which is relatively new addition to ch!
 
-and we can do a join here or a simple select.
+simple syntax. our fields represent our dict layout
+we use dictionary eninge without any additional arguments
+
+so now we can do a join here or even a simple select.
 so now our dict is just like regular table.
 could be very convenient sometimes
 dictionary engine was added just recently, so that's nice
