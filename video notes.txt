@@ -105,3 +105,36 @@ probably don't use tabix
 * 5:15 switch
 * 5:54 pause
 * 6:39 start over "aggregates are amazing"
+
+
+11_1__cluster...
+* 35s cut switch
+* 1:57 long pause
+* 3:04 start over "khm, meaning",
+* 3:04 add text "khm khm"
+* at 3:06 switch to 11_2__cluster... video "to run all the goodness"
+
+11_2__cluster...
+* 35s start over "and zookeeper will be booted up..."
+* 50s start over "what will it give us"
+* 55s-1:00 make smooth "it gives us this..."
+* around 2:00-2:10 some pauses
+* 2:26 start over "that is"
+* 3:30 pause
+* 4:39 merges to 11_3__cluster... "to wrap up..."
+
+11_3__cluster...
+* 35s don't have to cut. fine
+* 1:02 start over "if I select all from event table"
+* 1:10 fine
+* 2:18 pause
+* 2:32 cut switch and pause
+* 2:46 cut switch
+* 3:35 cut pause
+* 3:58 cut switch
+
+11_2__conclusion
+* starts ~2:28s
+* 1:29 cut pause
+
+
