@@ -2,12 +2,11 @@ Preparation:
 * rm data dir
 * rm preprocessed configs
 * slides
-* browser tabix
 * vs with course notes
 
 Welcome back everyone.
 
-Sometimes we all have a lot of data to process. khm
+Sometimes we all have a lot of data to process. khm khm
 Which is all well and good. But not always do we have ram to process it.
 
 Ch has an answer here
@@ -16,63 +15,62 @@ since CH will perform your query on a small subset of our data.
 
 ok. lets start by creating regular table
 
--- swithc to tabix
-
 -- fastworward til execute all commands
 
 ok so what we saw is of course regular select works,
 But sampling not so much.
-To fix it, we need to of course to enable sampling
+To fix it, we need to of course enable sampling
 
-let's fix it with proper sampling table
+To fix it wee need to create proper sampling table
 
--- switch to tabix tab 2
+-- execute create table and inserts and selects
 
-Now when we select from this table ch will return an evenly pseudorandom data sample.
+Now, when we select from this table ch will return an evenly
+pseudorandom data sample.
 
 ok sort of makes sense. let's benchmark a bit
 
--- switch to tab 3
+To do that we'll need to gather one more metric
+Query Memory usage
 
-lets create 2 separate benchmarking tables
+-- execute query
 
-and lets run our inserter and selecter,
-We've seen them in action, so we know what to expecte, I'll just note that
-I've changed configs accordingly with new dbs and table names
+to enable this query we'll need to add a flag in user configs
 
-refer to lesson files for the bash script
+-- show users.xml
 
-and
+Having done all that I procided to bencmarking
+I was operating with with regular 365000000 events and
+results were
+Dramatic pause ...
 
-Please note that I enabled query log for my user,
-It will help us to compare memory usage for our queries
-
-with command like this
-
--- switch to tabix tab 4
-
-Refer to users.xml for an axample of config that enables query log
-
--- open files on investigation
-
-So I put 365000000 events to our tables beforehand, and results are as follows
-
-Dramatic pouse
-
-And I couldn't make sampling to work properly.
+... I couldn't make sampling to work properly.
 There's the file called called sampling_investigation.
 
-You can give it a read, I'll just summarize by saying that
+-- show the file
+
+Here I outline my process.
+Hopefully it makes for an entertaining read.
+
+I'll just summarize by saying that
 I couldn't quite see any performance benefits from using sampling
 
-Even memory consuption didn't go down
+CH says that there will be none,
+but event
+Memory consuption didn't go down
 Good news is that if you dont use "sample" in your select query
 table with sampling enabled will work just as fine and won't take
 much more space as well.
-But I would strongly suggest to benchmark your schema. maybe you'll find a good
-combination of primary key, select clouse and so on to make it work.
+
+-- switch to summary slide
+
+To summorize I would strongly suggest to benchmark your schema.
+maybe you'll find a good
+combination of primary key and order by fields to make it work.
 Plus maybe it will work for your more complex select statements
 
-Please let me know if you made it to work.
+Unfortunately, I coudn't make it to work with our toy example.
+Have different experience? Please let me know!
+
 
 See you next time
