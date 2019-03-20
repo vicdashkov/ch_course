@@ -1,39 +1,53 @@
-* Has your data grown too much? *
+Has your data grown too much?
 
 Do you have to wait forever to get simple answers from your system?
+
 Do you just want to explore your data in real time while it’s actually relevant and not 30 minutes later when nobody cares anymore?
+
 Do you want your dev team to work on features and not on infrastructure?
 
 Then you’ve come to the right place. ClickHouse is a new technology that addresses all of these pain points above.
 
-It was designed to be very, very fast. And it is.
+ClickHouse was designed to be very, very fast. And it is.
 
-What is more, it’s extremely rigid and fails only in extreme circumstances.
+What is more, it’s extremely rigid, and it fails only in extreme circumstances.
+
 Put ease of installation and maintenance on top, and you get nearly ideal solution for most OLAP use cases.
 
-* How can I help? *
+How can I help?
 
 Together we’ll explore main functionality of ClickHouse.
+
 We will also develop tools and skills to incorporate and manage this database in existing and future systems.
 
 We are going to have lots of fun along the way, because technology should be fun, and with the tools like ClickHouse it is.
 
 Some of the topics we’ll cover:
-* ClickHouse Installation
-* External dictionaries
-* Arrays
-* Sampling
-* Aggregation
-* Cluster Configuration
+
+ClickHouse Installation
+
+External dictionaries
+
+Arrays
+
+Sampling
+
+Aggregation
+
+Cluster Configuration
 
 You'll find lots of code snippets and supplementary material inside the course to help you master even the hardest topics.
 
 At the end of the course, you’ll be able to confidently use ClickHouse in production.
+
 You’ll get familiar with main features and quirks of the database, as well as some edge cases you might encounter
 
-* Is it for me? *
-If you are an IT pro with specific OLAP needs, or just a DEVop looking for new great technology, then my answer is yes.
+Is it for me?
+
+If you are an IT pro with specific OLAP needs, or just a DEVOPs looking for a new great technology, then my answer is yes.
+
 All you need is basic knowledge of SQL and Docker
-ClickHouse will make all the rest a breeze.
+
+ClickHouse will make the rest a breeze.
 
 Can't wait to see you inside!
