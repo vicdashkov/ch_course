@@ -165,3 +165,54 @@
 * 1:29 cut pause
 
 
+New notes:
+
+1__promo_complete:
+* start: see promo_hi.m4a; slightly longer pause where recording ends and "...We have no choise but..." starts
+* ~0:27 pause before "...jokes aside though" (optional)
+* ~1:14 replace "then you've come to a right place" with recording from then_you_ve_come.m4a (optional, but super preferable)
+* ~1:23 sligtly longer time befor "join me" (optional)
+
+2_overview_comp:
+* start: music fading away (optional)
+* forgot to cut 0:53 -> 0:56 should be "which we can visualize like this [pause] this image was borrowed... "
+
+3_basic setup_comp:
+* 1:52 >>> can't see the command and top of the first line in editor
+* 6:29 whole section about tabix left out "there's one more client you can use..." till the summary slide
+    (OK not to cut switches for this section to save time)
+
+4__intro merge tree family_comp:
+* 1:29 "and now lets just try to create" duplicate; (OK to leave as is)
+
+5__bench merge tree_comp:
+* 1:53 a bit rough cut. small pause would be nice (OK to leave as is)
+* forgot to cut 4:29 -> 4:59 "additionally we can get some idea..."
+* 7:35 missed to cut "and the most surprising number to me..." (OK to leave as is)
+
+6__collapsing merge tree_comp:
+* commands are not visible; OK to change ration for the video
+* 1:15 somewhere around here the becomes not in sync with video. very noticable. get back to sync only on summary slide
+
+7__dict comp:
+* 4:07 commands are not visible; OK to change ration for the video
+* 7:39 add text "for dictionaries" (optional)
+
+8__sampling_comp:
+* commands are not visible; OK to change ration for the video
+
+9__arrays_comp:
+* problems with sync. especially noticeable at around 3:00
+
+10__aggregates_comp:
+* well done
+
+11_cluster replication and shurding-comp:
+* I made a mistake in previous description
+    >>  * at 3:06 switch to 11_2__cluster... video "to run all the goodness"
+    should've been
+    >>  * at    >3:36<   switch to 11_2__cluster... video "to run all the goodness"
+would be cool if you can fix it, but It's on me, so optional
+
+12__conclusion_comp:
+* well done
